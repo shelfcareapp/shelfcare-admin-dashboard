@@ -16,7 +16,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { toast } from 'react-toastify';
-import { Message, User } from '@/types';
+import { User } from '@/types';
 import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import {
   SelectedChatProvider,

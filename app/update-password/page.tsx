@@ -26,6 +26,7 @@ export default function UpdatePassword() {
         toast.error('User not found. Please sign in again.');
       }
     } catch (error) {
+      console.error(error);
       toast.error('Failed to update password. Please try again.');
     } finally {
       setLoading(false);

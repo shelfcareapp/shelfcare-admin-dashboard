@@ -40,6 +40,7 @@ const Component = () => {
 
       setUploading(false);
     } catch (error) {
+      console.error(error);
       toast.error('Failed to update profile');
       setUploading(false);
     }

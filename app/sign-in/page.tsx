@@ -45,6 +45,7 @@ export default function SignIn() {
         toast.error('Error retrieving user data.');
       }
     } catch (error) {
+      console.error(error);
       toast.error('Failed to sign in. Please check your credentials.');
     } finally {
       setLoading(false);

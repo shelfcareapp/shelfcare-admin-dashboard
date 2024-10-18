@@ -98,6 +98,7 @@ export default function OrderForm() {
         }
       });
     } catch (error) {
+      console.error(error);
       toast.error('Error saving order. Please try again.');
     }
   };
