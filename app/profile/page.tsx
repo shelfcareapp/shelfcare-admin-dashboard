@@ -126,5 +126,9 @@ const Component = () => {
 };
 
 export default function Profile() {
-  return <Layout title="Profile" children={<Component />} />;
+  return (
+    <Layout title="Profile">
+      <Component />
+    </Layout>
+  );
 }
