@@ -113,11 +113,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <a href="/">
-                  <h1 className="text-2xl font-bold text-secondary">
-                    Shelfcare
-                  </h1>
-                </a>
+                <h1 className="text-2xl font-bold text-secondary">Shelfcare</h1>
               </div>
               <div className="hidden md:block">
                 <div className="ml-10 flex items-baseline space-x-4">
