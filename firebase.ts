@@ -1,7 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import { getMessaging, onMessage, getToken } from 'firebase/messaging';
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
@@ -15,9 +14,27 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const messaging = getMessaging(app);
 export const storage = getStorage(app);
 
-export { getToken, onMessage };
+let messaging = null;
+let getToken = null;
+let onMessage = null;
+
+if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+  import('firebase/messaging')
+    .then(
+      ({ getMessaging, getToken: fetchToken, onMessage: handleOnMessage }) => {
+        messaging = getMessaging(app);
+        getToken = fetchToken;
+        onMessage = handleOnMessage;
+      }
+    )
+    .catch((error) => {
+      console.error('Firebase Messaging initialization failed:', error);
+    });
+}
+
+export { messaging, getToken, onMessage };
