@@ -7,6 +7,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import Layout from '@/components/Layout';
 import { toast } from 'react-toastify';
+import { User } from '@/types';
 
 const Component = () => {
   const [user] = useAuthState(auth);
@@ -34,7 +35,8 @@ const Component = () => {
       }
 
       if (password) {
-        await updatePassword(user as unknown as any, password);
+        // @ts-error - User type is not compatible with the one from Firebase
+        await updatePassword(user as any, password);
         toast.success('Password updated successfully!');
       }
 

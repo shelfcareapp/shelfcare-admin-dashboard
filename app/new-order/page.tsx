@@ -11,6 +11,12 @@ import {
 } from './services';
 import { toast } from 'react-toastify';
 
+interface Service {
+  name: string;
+  price: number;
+  additionalOptions?: { name: string; price: number }[];
+}
+
 export default function OrderForm() {
   const [users, setUsers] = useState<any[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -107,7 +113,7 @@ export default function OrderForm() {
     setExpandedCategory((prev) => (prev === category ? null : category));
   };
 
-  const renderServiceSection = (categoryName: string, services: any[]) => {
+  const renderServiceSection = (categoryName: string, services: Service[]) => {
     const isExpanded = expandedCategory === categoryName;
 
     return (
