@@ -101,6 +101,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
       await auth.signOut();
       router.push('/');
     } catch (error) {
+      console.error('Error signing out:', error);
       toast.error('Failed to sign out');
     }
   };

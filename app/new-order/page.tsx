@@ -17,8 +17,16 @@ interface Service {
   additionalOptions?: { name: string; price: number }[];
 }
 
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  address: string;
+  phone: string;
+}
+
 export default function OrderForm() {
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [selectedServices, setSelectedServices] = useState<{
     [key: string]: boolean;
@@ -38,7 +46,7 @@ export default function OrderForm() {
       const usersData = usersSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data()
-      }));
+      })) as User[];
       setUsers(usersData);
     };
     fetchUsers();
@@ -145,7 +153,7 @@ export default function OrderForm() {
                 {service.additionalOptions &&
                   service.additionalOptions.length > 0 && (
                     <div className="ml-6 mt-2">
-                      {service.additionalOptions.map((subOption: any) => (
+                      {service.additionalOptions.map((subOption) => (
                         <div
                           key={subOption.name}
                           className="flex items-center mt-2"
