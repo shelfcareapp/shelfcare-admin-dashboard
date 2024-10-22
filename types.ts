@@ -2,7 +2,7 @@ export interface Message {
   sender: string;
   content: string;
   time: string;
-  imageUrl?: string | null;
+  imageUrls?: string[];
   isAdmin: boolean;
   id?: string;
   isRead?: boolean;

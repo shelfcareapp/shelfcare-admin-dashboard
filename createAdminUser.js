@@ -17,15 +17,21 @@ const createAdminUser = async (email, password) => {
       disabled: false
     });
 
-    await db.collection('users').doc(user.uid).set({
-      firstLogin: true
+    await db.collection('admins').doc(user.uid).set({
+      email: email,
+      firstLogin: true,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      isAdmin: true
     });
 
-    console.log('Admin user created:', user.uid);
+    console.log(
+      'Admin user created and added to "admins" collection:',
+      user.uid
+    );
   } catch (error) {
     console.log('Error creating admin user:', error);
   }
 };
 
-// Replace this wih
-createAdminUser('shelfcaretech@gmail.com', 'TempPassword123!');
+// Call the function with the email and password of the admin user you want to create
+createAdminUser('maija.tunturi@shelfcare.app', 'changeMe123');

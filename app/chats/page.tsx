@@ -2,21 +2,22 @@
 
 import { useState, useEffect } from 'react';
 import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { db, storage } from '@/firebase';
 import Layout from '@/components/Layout';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { FiPaperclip, FiSearch } from 'react-icons/fi';
-import Image from 'next/image';
 import { toast } from 'react-toastify';
 import { Message, User } from '@/types';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { AiOutlineLoading } from 'react-icons/ai';
 
 export default function AdminChat() {
   const [users, setUsers] = useState<User[]>([]);
   const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  const [newMessages, setNewMessages] = useState<Message[]>([]);
-
   const [message, setMessage] = useState<string>('');
-  const [image, setImage] = useState<File | null>(null);
+  const [images, setImages] = useState<File[] | null>(null);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [uploading, setUploading] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const selectedUser = users.find((u: User) => u.id === selectedChatId);
@@ -39,47 +40,80 @@ export default function AdminChat() {
     return () => unsubscribe();
   }, [selectedChatId]);
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      console.log(e.target.files);
+      const filesArray = Array.from(e.target.files);
+      setImages((prev) => (prev ? [...prev, ...filesArray] : filesArray));
+
+      const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
+      setImagePreviews((prev) => [...prev, ...newPreviews]);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    if (images) {
+      const updatedImages = images.filter((_, i) => i !== index);
+      const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
+      setImages(updatedImages);
+      setImagePreviews(updatedPreviews);
+    }
+  };
+
   const handleSendMessage = async () => {
-    if (!message.trim() && !image) return;
+    if (!message.trim() && (!images || images.length === 0)) return;
 
     const newMessage: Message = {
       sender: 'Admin',
       content: message.trim(),
       time: new Date().toLocaleTimeString(),
-      imageUrl: null,
-      isAdmin: true,
-      isRead: true
+      imageUrls: [],
+      isRead: false,
+      isAdmin: true
     };
 
+    setUploading(true);
+
+    let uploadedImageUrls: string[] = [];
+    if (images && images.length > 0) {
+      try {
+        const uploadPromises = images.map(async (image) => {
+          const imageRef = ref(storage, `chats-images/admin/${image.name}`);
+          await uploadBytes(imageRef, image);
+          const downloadUrl = await getDownloadURL(imageRef);
+          return downloadUrl;
+        });
+
+        uploadedImageUrls = await Promise.all(uploadPromises);
+
+        setImages(null);
+        setImagePreviews([]);
+
+        newMessage.imageUrls = uploadedImageUrls;
+      } catch (error) {
+        console.error('Error uploading images:', error);
+        toast.error('Error uploading images.');
+      }
+    }
+
+    const updatedMessages = [...selectedUser!.messages, newMessage];
+    const chatDocRef = doc(db, 'chats', selectedUser!.id);
+
     try {
-      const updatedMessages = [...selectedUser!.messages, newMessage];
-      const updatedUser = {
-        ...selectedUser!,
-        messages: updatedMessages
-      };
-
-      const chatRef = doc(db, 'chats', selectedUser!.id);
-      await updateDoc(chatRef, {
-        messages: updatedMessages
-      });
-
-      const updatedUsers = users.map((user: User) =>
-        user.id === selectedUser!.id ? updatedUser : user
-      );
-
-      setUsers(updatedUsers);
-      setNewMessages([...newMessages, newMessage]);
+      await updateDoc(chatDocRef, { messages: updatedMessages });
       setMessage('');
-      setImage(null);
     } catch (error) {
       console.error('Error sending message:', error);
-      toast.error('Error sending message. Please try again.');
+      toast.error('Error sending message.');
+    } finally {
+      setUploading(false);
     }
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setImage(e.target.files[0]);
+  const handleSendOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
@@ -97,9 +131,7 @@ export default function AdminChat() {
 
     try {
       const chatRef = doc(db, 'chats', user.id);
-      await updateDoc(chatRef, {
-        messages: updatedMessages
-      });
+      await updateDoc(chatRef, { messages: updatedMessages });
 
       const updatedUsers = users.map((u: User) =>
         u.id === user.id ? updatedUser : u
@@ -113,6 +145,31 @@ export default function AdminChat() {
   const filteredUsers = users.filter((u: User) =>
     u.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const showImagePreviews = () => {
+    if (imagePreviews.length > 0) {
+      return (
+        <div className="flex flex-wrap items-center gap-2 mb-4">
+          {imagePreviews.map((url, i) => (
+            <div key={i} className="relative">
+              <img
+                src={url}
+                alt={`Image ${i + 1}`}
+                className="w-20 h-20 object-cover rounded-md border border-gray-200"
+              />
+              <button
+                onClick={() => removeImage(i)}
+                className="absolute top-0 right-0 bg-white rounded-full text-red-500 hover:text-red-700 p-1"
+                style={{ transform: 'translate(50%, -50%)' }}
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      );
+    }
+  };
 
   return (
     <Layout title="Admin Dashboard">
@@ -186,16 +243,21 @@ export default function AdminChat() {
                             : 'bg-gray-200'
                         }`}
                       >
-                        {msg.imageUrl && (
-                          <Image
-                            src={msg.imageUrl}
-                            alt="Sent image"
-                            width={200}
-                            height={200}
-                            className="mb-2 rounded-lg"
-                          />
+                        {msg.imageUrls && msg.imageUrls.length > 0 && (
+                          <div className="flex flex-wrap gap-2 mb-2">
+                            {msg.imageUrls.map((url, i) => (
+                              <img
+                                key={i}
+                                src={url}
+                                alt={`Sent image ${i + 1}`}
+                                className="rounded-lg max-w-xs"
+                              />
+                            ))}
+                          </div>
                         )}
+
                         {msg.content && <p>{msg.content}</p>}
+
                         <span className="text-xs text-gray-300">
                           {msg.time}
                         </span>
@@ -216,29 +278,40 @@ export default function AdminChat() {
       </div>
 
       {/* Chat input */}
-      <div className="p-4 bg-gray-100 shadow flex items-center sticky bottom-0">
-        <label htmlFor="file-upload" className="cursor-pointer">
-          <FiPaperclip className="text-gray-500 mr-2" />
-        </label>
-        <input
-          type="file"
-          id="file-upload"
-          className="hidden"
-          onChange={handleFileChange}
-        />
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder="Type a message..."
-          className="flex-1 bg-gray-200 p-2 rounded-lg outline-none"
-        />
-        <button
-          onClick={handleSendMessage}
-          className="ml-4 bg-primary text-white p-2 rounded-lg"
-        >
-          <PaperAirplaneIcon className="h-6 w-6 text-white transform -rotate-90" />
-        </button>
+      <div className="p-4 bg-white shadow flex flex-col z-10">
+        {showImagePreviews()}
+        <div className="p-4 bg-gray-100 shadow flex items-center sticky bottom-0">
+          <label htmlFor="file-upload" className="cursor-pointer">
+            <FiPaperclip className="text-gray-500 mr-2" />
+          </label>
+          <input
+            type="file"
+            id="file-upload"
+            className="hidden"
+            onChange={handleFileChange}
+            multiple
+          />
+
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="flex-1 bg-gray-200 p-2 rounded-lg outline-none"
+            onKeyDown={handleSendOnEnter}
+          />
+          <button
+            onClick={handleSendMessage}
+            className="ml-4 bg-primary text-white p-2 rounded-lg"
+            disabled={uploading}
+          >
+            {uploading ? (
+              <AiOutlineLoading className="animate-spin" />
+            ) : (
+              <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
+            )}
+          </button>
+        </div>
       </div>
     </Layout>
   );
