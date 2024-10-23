@@ -17,7 +17,7 @@ const createAdminUser = async (email, password) => {
       disabled: false
     });
 
-    await db.collection('admins').doc(user.uid).set({
+    await db.collection('users').doc(user.uid).set({
       email: email,
       firstLogin: true,
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
