@@ -15,3 +15,33 @@ export interface User {
   name: string;
   messages: Message[];
 }
+
+export interface SelectableUser {
+  id: string;
+  name: string;
+  email: string;
+  address: string;
+  phone: string;
+  entranceInfo: string;
+  postalCode: string;
+}
+
+export type SelectedServices = Record<
+  string,
+  { parent: string; price: number; quantity: number; name: string }
+>;
+
+export interface Order {
+  id: string;
+  customerId: string;
+  customerEmail: string;
+  customerName: string;
+  customerAddress: string;
+  customerPhone: string;
+  services: SelectedServices;
+  totalPrice: number;
+  status: string;
+  paymentEnabled: boolean;
+  pickupTime?: string;
+  deliveryTime?: string;
+}

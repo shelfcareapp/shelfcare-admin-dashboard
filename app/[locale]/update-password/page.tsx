@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { auth } from '../../firebase';
+import { auth } from '../../../firebase';
 import { updatePassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
 import { AiOutlineLoading } from 'react-icons/ai';

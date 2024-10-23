@@ -1,6 +1,6 @@
 'use client';
 
-import { auth, db } from '@/firebase';
+import { auth, db } from '../firebase';
 import {
   Disclosure,
   DisclosureButton,
@@ -16,12 +16,14 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { toast } from 'react-toastify';
-import { User } from '@/types';
+import { User } from '../types';
 import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import {
   SelectedChatProvider,
   useSelectedChat
-} from '@/context/SelectedChatContext';
+} from 'context/SelectedChatContext';
+import LanguageSwitcher from './LanguageSwitcher';
+import { useTranslations } from 'next-intl';
 
 export interface LayoutProps {
   title: string;
@@ -40,6 +42,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
   const [notificationOpen, setNotificationOpen] = useState(false);
   const router = useRouter();
   const bellRef = useRef(null);
+  const t = useTranslations('header');
 
   useEffect(() => {
     if (!loading && !user) {
@@ -124,25 +127,26 @@ function LayoutComponent({ title, children }: LayoutProps) {
                       'rounded-md px-3 py-2 font-medium'
                     )}
                   >
-                    Messages
+                    {t('messages')}
                   </a>
                   <a
                     href="/new-order"
                     className="text-secondary hover:bg-[#A52A2A] hover:text-white rounded-md px-3 py-2 font-medium"
                   >
-                    New Order
+                    {t('new-order')}
                   </a>
                   <a
                     href="/orders"
                     className="text-secondary hover:bg-[#A52A2A] hover:text-white rounded-md px-3 py-2 font-medium"
                   >
-                    Orders
+                    {t('orders')}
                   </a>
                 </div>
               </div>
             </div>
             <div className="hidden md:block">
               <div className="ml-4 flex items-center md:ml-6">
+                <LanguageSwitcher />
                 <div className="relative" ref={bellRef}>
                   <button
                     type="button"
@@ -222,7 +226,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
                         href="/profile"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        Profile
+                        {t('profile')}
                       </a>
                     </MenuItem>
                     <MenuItem>
@@ -230,7 +234,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
                         onClick={handleSignOut}
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
                       >
-                        Sign out
+                        {t('sign-out')}
                       </button>
                     </MenuItem>
                   </MenuItems>
@@ -286,7 +290,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
                 href="/profile"
                 className="block rounded-md px-3 py-2 text-base font-medium text-secondary hover:bg-[#A52A2A] hover:text-white"
               >
-                Profile
+                {t('profile')}
               </DisclosureButton>
               <DisclosureButton
                 as="a"
@@ -294,7 +298,7 @@ function LayoutComponent({ title, children }: LayoutProps) {
                 className="block rounded-md px-3 py-2 text-base font-medium text-secondary hover:bg-[#A52A2A] hover:text-white"
                 onClick={handleSignOut}
               >
-                Sign out
+                {t('sign-out')}
               </DisclosureButton>
             </div>
           </div>

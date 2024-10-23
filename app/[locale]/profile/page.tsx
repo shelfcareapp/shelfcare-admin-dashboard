@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { auth, db } from '@/firebase';
+import { auth, db } from '../../../firebase';
 import { updateProfile, updatePassword } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import Layout from '@/components/Layout';
+import Layout from 'components/Layout';
 import { toast } from 'react-toastify';
 import { User } from 'firebase/auth';
 

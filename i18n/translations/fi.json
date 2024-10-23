@@ -1,0 +1,766 @@
+{
+  "header": {
+    "messages": "Viestit",
+    "orders": "Tilaukset",
+    "new-order": "Uusi tilaus",
+    "profile": "Profiili",
+    "sign-out": "Kirjaudu ulos"
+  },
+  "chats": {
+    "admin-dashboard": "Admin - Hallintapaneeli",
+    "no-messages": "Ei viestejä",
+    "new-message": "Uusi viesti",
+    "search-users": "Hae käyttäjiä",
+    "order": "Tilaus",
+    "type-message": "Kirjoita viesti...",
+    "no-users": "Ei käyttäjiä",
+    "select-user-text": "Valitse käyttäjä keskustellaksesi"
+  },
+  "new-order": {
+    "title": "Uusi tilaus",
+    "back": "Takaisin",
+    "select-service": "Valitse palvelu",
+    "next-review": "Seuraava: Tarkista tilaus"
+  },
+  "user-selection": {
+    "title": "Valitse käyttäjä",
+    "no-users": "Ei käyttäjiä",
+    "select-user": "Valitse käyttäjä",
+    "next-select-services": "Seuraava: Valitse palvelut"
+  },
+  "order-review": {
+    "order": "Tilaus",
+    "service-details": "Palvelun tiedot",
+    "price": "Hinta",
+    "quantity": "Määrä",
+    "total": "Yhteensä",
+    "discount": "Alennus (%)",
+    "delivery-service-fees": "Toimitusmaksut",
+    "subtotal": "Välisumma",
+    "pickup-time": "Noutoaika",
+    "select-pickup-time": "Valitse noutoaika",
+    "return-time": "Palautusaika",
+    "select-return-time": "Valitse palautusaika",
+    "customer": "Asiakas",
+    "address": "Osoite",
+    "save-order": "Tallenna tilaus",
+    "email": "Sähköposti"
+  },
+  "pricing": {
+    "title": "Hinnasto",
+    "disclaimer": "Hinnat ovat alkaen-hintoja ja voivat vaihdella palvelun monimutkaisuuden ja käytettyjen materiaalien mukaan. Lisämaksuja saattaa aiheutua.",
+    "quantity": "Määrä",
+    "custom-service": "Räätälöity palvelu",
+    "price": "Hinta",
+    "add": "Lisää",
+    "categories": {
+      "0": "Ompelu",
+      "1": "Suutari",
+      "2": "Pesula"
+    },
+    "tailoring": {
+      "title": "Ompelupalvelut",
+      "groups": {
+        "trousers": {
+          "title": "Housut",
+          "services": {
+            "trouser_leg_shortening": {
+              "name": "Lahkeen lyhennys",
+              "price": "29",
+              "subOptions": {
+                "hidden_stitch": { "name": "Piilo-ommel", "price": "+6" },
+                "cuffs": { "name": "Upslaaki", "price": "+6" },
+                "binding_tape": { "name": "Kanttinauha", "price": "+9" }
+              }
+            },
+            "trouser_leg_narrowing": {
+              "name": "Lahkeiden kavennus",
+              "price": "39",
+              "subOptions": {}
+            },
+            "waist_narrowing_back_seam": {
+              "name": "Vyötärön kavennus takasaumasta",
+              "price": "37",
+              "subOptions": {}
+            },
+            "waist_widening_back_seam": {
+              "name": "Vyötärön levennys takasaumasta",
+              "price": "37",
+              "subOptions": {}
+            },
+            "waist_narrowing_side_seams": {
+              "name": "Vyötärön kavennus sivusaumoista",
+              "price": "45",
+              "subOptions": {
+                "narrowing_exceeding_4cm": {
+                  "name": "Kavennus tehdään sivusaumoista, kun kavennus on yli 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "zipper_replacement": {
+              "name": "Vetoketjun vaihto",
+              "price": "36",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "22",
+              "subOptions": {}
+            }
+          }
+        },
+        "jeans": {
+          "title": "Farkut",
+          "services": {
+            "leg_shortening": {
+              "name": "Lahkeiden lyhennys",
+              "price": "32",
+              "subOptions": {}
+            },
+            "leg_narrowing": {
+              "name": "Lahkeiden kavennus",
+              "price": "42",
+              "subOptions": {}
+            },
+            "waist_narrowing_back_seam": {
+              "name": "Vyötärön kavennus takasaumasta",
+              "price": "42",
+              "subOptions": {}
+            },
+            "waist_narrowing_side_seams": {
+              "name": "Vyötärön kavennus sivusaumoista",
+              "price": "65",
+              "subOptions": {
+                "narrowing_exceeding_4cm": {
+                  "name": "Kavennus tehdään sivusaumoista, kun kavennus on yli 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "zipper_replacement": {
+              "name": "Vetoketjun vaihto",
+              "price": "39",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "22",
+              "subOptions": {}
+            }
+          }
+        },
+        "shirts": {
+          "title": "Paidat",
+          "services": {
+            "shirts_sleeve_shortening": {
+              "name": "Hihojen lyhennys",
+              "price": "29",
+              "subOptions": {
+                "slit_sleeves": {
+                  "name": "Halkiolliset hihat",
+                  "price": "+10"
+                }
+              }
+            },
+            "waist_narrowing": {
+              "name": "Vyötärön kavennus",
+              "price": "29",
+              "subOptions": {}
+            },
+            "shirts_hem_shortening": {
+              "name": "Helman lyhennys",
+              "price": "29",
+              "subOptions": {
+                "slit_hem": {
+                  "name": "Halkiollinen helma",
+                  "price": "+14"
+                }
+              }
+            },
+            "cardigan_knit_sleeve_shortening": {
+              "name": "Villapaidan/neuleen hihojen lyhennys",
+              "price": "44",
+              "subOptions": {}
+            },
+            "cardigan_knit_waist_narrowing": {
+              "name": "Villapaidan/neuleen vyötärön kavennus",
+              "price": "49",
+              "subOptions": {}
+            },
+            "top_strap_shortening": {
+              "name": "Topin olkainten lyhennys",
+              "price": "22",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "22",
+              "subOptions": {
+                "cardigan_knit_shirt": { "name": "Villapaita", "price": "+7" }
+              }
+            }
+          }
+        },
+        "blazers_suit_jackets": {
+          "title": "Jakut & Pikkutakit",
+          "services": {
+            "sleeve_shortening": {
+              "name": "Hihojen lyhennys",
+              "price": "42",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" },
+                "slit_sleeves": {
+                  "name": "Halkiolliset hihat",
+                  "price": "+15"
+                }
+              }
+            },
+            "sleeve_lengthening": {
+              "name": "Hihojen pidennys",
+              "price": "55",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+12" }
+              }
+            },
+            "blazers_sleeve_narrowing": {
+              "name": "Hihojen kavennus",
+              "price": "49",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+18" }
+              }
+            },
+            "waist_narrowing_side_seams": {
+              "name": "Vyötärön kavennus sivusaumoista",
+              "price": "50",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+16" }
+              }
+            },
+            "blazers_hem_shortening": {
+              "name": "Helman lyhennys",
+              "price": "55",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" }
+              }
+            },
+            "shoulder_narrowing": {
+              "name": "Hartian kavennus",
+              "price": "74",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+25" }
+              }
+            },
+            "blazers_lining_replacement": {
+              "name": "Vuorin vaihtaminen",
+              "price": "220",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "22",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+5" }
+              }
+            }
+          }
+        },
+        "dresses_skirts": {
+          "title": "Mekot & Hameet",
+          "services": {
+            "dresses_hem_shortening": {
+              "name": "Helman lyhennys",
+              "price": "35",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+10" },
+                "slit_hem": {
+                  "name": "Halkiollinen helma",
+                  "price": "+15"
+                },
+                "hidden_stitch": { "name": "Piilo-ommel", "price": "+12" }
+              }
+            },
+            "skirt_narrowing_back_seam": {
+              "name": "Hameen kavennus takasaumasta",
+              "price": "37",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+10" },
+                "zipper_back_seam": {
+                  "name": "Vetoketju kyseisessä saumassa",
+                  "price": "+17"
+                }
+              }
+            },
+            "skirt_narrowing_side_seams": {
+              "name": "Hameen kavennus sivusaumoista",
+              "price": "45",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+10" },
+                "zipper_side_seam": {
+                  "name": "Vetoketju kyseisessä saumassa",
+                  "price": "+17"
+                },
+                "narrowing_exceeding_4cm": {
+                  "name": "Kavennus tehdään sivusaumoista, kun kavennus on yli 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "dress_narrowing_back_seam": {
+              "name": "Mekon kavennus takasaumasta",
+              "price": "39",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+10" },
+                "zipper_back_seam": {
+                  "name": "Vetoketju kyseisessä saumassa",
+                  "price": "+17"
+                }
+              }
+            },
+            "dress_narrowing_side_seams": {
+              "name": "Mekon kavennus sivusaumoista",
+              "price": "49",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+10" },
+                "zipper_back_seam": {
+                  "name": "Vetoketju kyseisessä saumassa",
+                  "price": "+17"
+                },
+                "narrowing_exceeding_4cm": {
+                  "name": "Kavennus tehdään sivusaumoista, kun kavennus on yli 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "skirt_zipper_replacement": {
+              "name": "Hameen vetoketjun vaihto",
+              "price": "35",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "dress_zipper_replacement": {
+              "name": "Mekon vetoketjun vaihto",
+              "price": "46",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "shortening_dress_straps": {
+              "name": "Mekon olkainten lyhennys",
+              "price": "24",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "22",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+5" }
+              }
+            }
+          }
+        },
+        "coats": {
+          "title": "Takit",
+          "services": {
+            "sleeve_shortening": {
+              "name": "Hihojen lyhennys",
+              "price": "45",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" },
+                "slit_sleeves": {
+                  "name": "Halkiolliset hihat",
+                  "price": "+15"
+                }
+              }
+            },
+            "sleeve_shortening_relocation_welt": {
+              "name": "Hihojen lyhennys ja resorin siirto",
+              "price": "65",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" }
+              }
+            },
+            "sleeve_shortening_relocation_zipper": {
+              "name": "Hihojen lyhennys ja vetoketjun siirto",
+              "price": "75",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" }
+              }
+            },
+            "coats_sleeve_narrowing": {
+              "name": "Hihojen kavennus",
+              "price": "52",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" }
+              }
+            },
+            "waist_narrowing": {
+              "name": "Vyötärön kavennus",
+              "price": "58",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+16" }
+              }
+            },
+            "coats_hem_shortening": {
+              "name": "Helman lyhennys",
+              "price": "62",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+14" },
+                "slit_hem": {
+                  "name": "Halkiollinen helma",
+                  "price": "+20"
+                }
+              }
+            },
+            "coat_with_zipper": {
+              "name": "Vetoketjullinen takki",
+              "price": "35",
+              "subOptions": {}
+            },
+            "shoulder_narrowing": {
+              "name": "Hartian kavennus",
+              "price": "79",
+              "subOptions": {
+                "vuorillinen": { "name": "Vuorillinen", "price": "+30" }
+              }
+            },
+            "coat_zipper_replacement": {
+              "name": "Kangastakin vetoketjun vaihto",
+              "price": "53",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                },
+                "length_over_knee": {
+                  "name": "Pituus yli polven",
+                  "price": "+15"
+                }
+              }
+            },
+            "winter_jacket_zipper_replacement": {
+              "name": "Toppatakin vetoketjun vaihto",
+              "price": "65",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                },
+                "length_over_knee": {
+                  "name": "Pituus yli polven",
+                  "price": "+25"
+                }
+              }
+            },
+            "coats_lining_replacement": {
+              "name": "Vuorin vaihtaminen",
+              "price": "220",
+              "subOptions": {
+                "length_over_knee": {
+                  "name": "Pituus yli polven",
+                  "price": "+60"
+                }
+              }
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "24",
+              "subOptions": {
+                "with_lining": { "name": "Vuorillinen", "price": "+6" }
+              }
+            }
+          }
+        },
+        "sports_outdoor_clothing": {
+          "title": "Urheilu- & Ulkoiluvaatteet",
+          "services": {
+            "sports_shirt_sleeve_shortening": {
+              "name": "Urheilupaidan hihojen lyhennys",
+              "price": "29",
+              "subOptions": {}
+            },
+            "sports_top_straps_shortening": {
+              "name": "Urheilutopin olkainten lyhennys",
+              "price": "22",
+              "subOptions": {}
+            },
+            "sports_shirt_zipper_replacement": {
+              "name": "Urheilupaidan vetoketjun vaihto",
+              "price": "42",
+              "subOptions": {
+                "metallinen_vetoketju": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "sports_pants_leg_shortening": {
+              "name": "Urheiluhousujen lahkeiden lyhennys",
+              "price": "29",
+              "subOptions": {
+                "vuorillinen": { "name": "Vuorillinen", "price": "+10" }
+              }
+            },
+            "sports_pants_waist_narrowing": {
+              "name": "Urheiluhousujen vyötärön kavennus",
+              "price": "37",
+              "subOptions": {
+                "vuorillinen": { "name": "Vuorillinen", "price": "+10" }
+              }
+            },
+            "sports_pants_zipper_replacement": {
+              "name": "Urheiluhousujen vetoketjun vaihto",
+              "price": "36",
+              "subOptions": {
+                "metallinen_vetoketju": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "patching_repair_seam": {
+              "name": "Paikkaus/korjaus saumasta",
+              "price": "22",
+              "subOptions": {
+                "vuorillinen": { "name": "Vuorillinen", "price": "+6" }
+              }
+            }
+          }
+        },
+        "other_tailoring_services": {
+          "title": "Muut Ompelimopalvelut",
+          "services": {
+            "button_sewing": {
+              "name": "Napin ompelu",
+              "price": "6",
+              "subOptions": {}
+            },
+            "extra_buttons": {
+              "name": "Lisänapit",
+              "price": "4",
+              "subOptions": {}
+            }
+          }
+        }
+      }
+    },
+
+    "cobbler": {
+      "title": "Suutaripalvelut",
+      "groups": {
+        "boots": {
+          "title": "Saappaat",
+          "services": {
+            "heel_replacement": {
+              "name": "Korkolapun vaihto",
+              "price": "28",
+              "subOptions": {}
+            },
+            "sole_replacement": {
+              "name": "Puolipohjan vaihto",
+              "price": "44",
+              "subOptions": {
+                "vibram_sole": { "name": "Vibram Sole", "price": "+10" }
+              }
+            },
+            "shoe_shine": {
+              "name": "Kenkien puhdistus ja hoito",
+              "price": "15",
+              "subOptions": {}
+            },
+            "leather_conditioning": {
+              "name": "Nahkakenkien syväpesu ja hoito",
+              "price": "20",
+              "subOptions": {}
+            }
+          }
+        },
+        "leather_jackets": {
+          "title": "Nahkatakit",
+          "services": {
+            "shortening_of_sleeves": {
+              "name": "Hihojen lyhennys",
+              "price": "65",
+              "subOptions": {}
+            },
+            "shortening_sleeves_moving_elastic": {
+              "name": "Hihojen lyhennys ja resorin siirto",
+              "price": "75",
+              "subOptions": {}
+            },
+            "narrowing_leather_jacket": {
+              "name": "Nahkatakin kavennus",
+              "price": "95",
+              "subOptions": {}
+            },
+            "replacing_zipper": {
+              "name": "Vetoketjun vaihto",
+              "price": "89",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "changing_lining": {
+              "name": "Vuorin vaihtaminen",
+              "price": "259",
+              "subOptions": {
+                "lining_silk": { "name": "Silk Lining", "price": "+30" }
+              }
+            }
+          }
+        },
+        "leather_pants": {
+          "title": "Nahkahousut",
+          "services": {
+            "leg_shortening": {
+              "name": "Lahkeiden lyhennys",
+              "price": "39",
+              "subOptions": {}
+            },
+            "leg_narrowing": {
+              "name": "Lahkeiden kavennus",
+              "price": "49",
+              "subOptions": {}
+            },
+            "zipper_replacement_thin_leather": {
+              "name": "Vetoketjun vaihto, ohut nahka",
+              "price": "49",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "zipper_replacement_thick_leather": {
+              "name": "Vetoketjun vaihto, paksu nahka",
+              "price": "59",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "laundry": {
+      "title": "Pesu / Kuivapesu",
+      "services": {
+        "trousers": {
+          "name": "Housut",
+          "price": "18"
+        },
+        "skirt": {
+          "name": "Hame",
+          "price": "17",
+          "subOptions": {
+            "length_over_knee": {
+              "name": "Pituus yli polven",
+              "price": "+9"
+            }
+          }
+        },
+        "suit": {
+          "name": "Puku",
+          "price": "38",
+          "subOptions": {
+            "silk_suit": {
+              "name": "Silkkipuku",
+              "price": "+15"
+            },
+            "suit_with_vest": {
+              "name": "Puku liivillä",
+              "price": "46"
+            }
+          }
+        },
+        "dress_mini": {
+          "name": "Mekko, mini",
+          "price": "32"
+        },
+        "dress_midi": {
+          "name": "Mekko, midi",
+          "price": "39"
+        },
+        "dress_maxi": {
+          "name": "Mekko, maxi",
+          "price": "45"
+        },
+        "evening_dress": {
+          "name": "Iltapuku",
+          "price": "68"
+        },
+        "jacket": {
+          "name": "Jakku / pikkutakki",
+          "price": "26"
+        },
+        "coat": {
+          "name": "Kangastakki",
+          "price": "39",
+          "subOptions": {
+            "wool_coat": {
+              "name": "Villakangastakki",
+              "price": "+5"
+            },
+            "length_over_knee": {
+              "name": "Pituus yli polven",
+              "price": "+10"
+            }
+          }
+        },
+        "winter_jacket": {
+          "name": "Toppatakki",
+          "price": "27",
+          "subOptions": {
+            "length_over_knee": {
+              "name": "Pituus yli polven",
+              "price": "+10"
+            }
+          }
+        },
+        "down_jacket": {
+          "name": "Untuvatakki",
+          "price": "39",
+          "subOptions": {
+            "length_over_knee": {
+              "name": "Pituus yli polven",
+              "price": "+10"
+            }
+          }
+        },
+        "canada_goose_jacket": {
+          "name": "Canada Goose -takki",
+          "price": "59"
+        }
+      }
+    }
+  },
+
+  "common": {
+    "next": "Seuraava",
+    "submit": "Lähetä",
+    "pay": "Maksa",
+    "back": "Takaisin",
+    "cancel": "Peruuta",
+    "success": "Tilauksesi on lähetetty onnistuneesti.",
+    "loading": "Ladataan...",
+    "continue": "Jatka",
+    "orderSuccess": "Tilaus on lähetetty onnistuneesti!",
+    "error": "Tapahtui virhe. Yritä uudelleen myöhemmin.",
+    "emailSuccess": "Sähköposti lähetetty onnistuneesti!"
+  }
+}

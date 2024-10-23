@@ -1,0 +1,723 @@
+{
+  "header": {
+    "messages": "Messages",
+    "orders": "Orders",
+    "new-order": "New Order",
+    "profile": "Profile",
+    "sign-out": "Sign out"
+  },
+  "chats": {
+    "admin-dashboard": "Admin Dashboard",
+    "no-messages": "No messages",
+    "new-message": "New message",
+    "search-users": "Search users...",
+    "order": "Order",
+    "type-message": "Type a message...",
+    "no-users": "No users found",
+    "select-user-text": "Select a user to start chatting"
+  },
+  "new-order": {
+    "title": "New order",
+    "back": "Back",
+    "select-service": "Select a service",
+    "next-review": "Next: Review order"
+  },
+  "user-selection": {
+    "title": "Select a user",
+    "no-users": "No users found",
+    "select-user": "Select user",
+    "next-select-services": "Next: Select a services"
+  },
+  "order-review": {
+    "order": "Order",
+    "service-details": "Service Details",
+    "price": "Price",
+    "quantity": "Quantity",
+    "total": "Total Payable",
+    "discount": "Discount (%)",
+    "delivery-services-fees": "Delivery Service Fees",
+    "subtotal": "Subtotal",
+    "pickup-time": "Pickup Time",
+    "select-pickup-time": "Select pickup Time",
+    "return-time": "Return Time",
+    "select-return-time": "Select return Time",
+    "customer": "Customer",
+    "address": "Address info",
+    "save-order": "Save Order",
+    "email": "Email"
+  },
+  "pricing": {
+    "title": "Pricing Guidelines",
+    "disclaimer": "The prices listed are starting prices and may vary based on the complexity and materials involved in each service. Additional charges may apply.",
+    "quantity": "Quantity",
+    "custom-service": "Custom Service",
+    "price": "Price",
+    "add": "Add",
+    "categories": {
+      "0": "Tailoring",
+      "1": "Cobbler",
+      "2": "Laundry"
+    },
+    "tailoring": {
+      "title": "Tailoring Services",
+      "groups": {
+        "trousers": {
+          "title": "Trousers",
+          "services": {
+            "trouser_leg_shortening": {
+              "name": "Trouser Leg Shortening",
+              "price": "29",
+              "subOptions": {
+                "hidden_stitch": { "name": "Hidden Stitch", "price": "+6" },
+                "cuffs": { "name": "Cuffs", "price": "+6" },
+                "binding_tape": { "name": "Binding Tape", "price": "+9" }
+              }
+            },
+            "trouser_leg_narrowing": {
+              "name": "Trouser Leg Narrowing",
+              "price": "39",
+              "subOptions": {}
+            },
+            "waist_narrowing_back_seam": {
+              "name": "Waist Narrowing from Back Seam",
+              "price": "37",
+              "subOptions": {}
+            },
+            "waist_widening_back_seam": {
+              "name": "Waist Widening from Back Seam",
+              "price": "37",
+              "subOptions": {}
+            },
+            "waist_narrowing_side_seams": {
+              "name": "Waist Narrowing from Side Seams",
+              "price": "45",
+              "subOptions": {
+                "narrowing_exceeding_4cm": {
+                  "name": "Narrowing is done from the side seams when the narrowing is more than 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "zipper_replacement": {
+              "name": "Zipper Replacement",
+              "price": "36",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "22",
+              "subOptions": {}
+            }
+          }
+        },
+        "jeans": {
+          "title": "Jeans",
+          "services": {
+            "leg_shortening": {
+              "name": "Leg Shortening",
+              "price": "32",
+              "subOptions": {}
+            },
+            "leg_narrowing": {
+              "name": "Leg Narrowing",
+              "price": "42",
+              "subOptions": {}
+            },
+            "waist_narrowing_back_seam": {
+              "name": "Waist Narrowing from Back Seam",
+              "price": "42",
+              "subOptions": {}
+            },
+            "waist_narrowing_side_seams": {
+              "name": "Waist Narrowing from Side Seams",
+              "price": "65",
+              "subOptions": {
+                "jeans_narrowing_exceeding_4cm": {
+                  "name": "Narrowing is done from the side seams when the narrowing is more than 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "zipper_replacement": {
+              "name": "Zipper Replacement",
+              "price": "39",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "22",
+              "subOptions": {}
+            }
+          }
+        },
+        "shirts": {
+          "title": "Shirts",
+          "services": {
+            "shirts_sleeve_shortening": {
+              "name": "Sleeve Shortening",
+              "price": "29",
+              "subOptions": {
+                "slit_sleeves": { "name": "Slit Sleeves", "price": "+10" }
+              }
+            },
+            "waist_narrowing": {
+              "name": "Waist Narrowing",
+              "price": "29",
+              "subOptions": {}
+            },
+            "shirts_hem_shortening": {
+              "name": "Hem Shortening",
+              "price": "29",
+              "subOptions": {
+                "slit_hem": { "name": "Slit Hem", "price": "+14" }
+              }
+            },
+            "cardigan_knit_sleeve_shortening": {
+              "name": "Cardigan/Knit Sleeve Shortening",
+              "price": "44",
+              "subOptions": {}
+            },
+            "cardigan_knit_waist_narrowing": {
+              "name": "Cardigan/Knit Waist Narrowing",
+              "price": "49",
+              "subOptions": {}
+            },
+            "top_strap_shortening": {
+              "name": "Shortening of Top Straps",
+              "price": "22",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "22",
+              "subOptions": {
+                "cardigan_knit_shirt": {
+                  "name": "Cardigan/Knit Shirt",
+                  "price": "+7"
+                }
+              }
+            }
+          }
+        },
+        "blazers_suit_jackets": {
+          "title": "Blazers & Suit Jackets",
+          "services": {
+            "sleeve_shortening": {
+              "name": "Sleeve Shortening",
+              "price": "42",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" },
+                "slit_sleeves": { "name": "Slit Sleeves", "price": "+15" }
+              }
+            },
+            "sleeve_lengthening": {
+              "name": "Sleeve Lengthening",
+              "price": "55",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+12" }
+              }
+            },
+            "blazers_sleeve_narrowing": {
+              "name": "Sleeve Narrowing",
+              "price": "49",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+18" }
+              }
+            },
+            "waist_narrowing_side_seams": {
+              "name": "Waist Narrowing from Side Seams",
+              "price": "50",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+16" }
+              }
+            },
+            "blazers_hem_shortening": {
+              "name": "Hem Shortening",
+              "price": "55",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" }
+              }
+            },
+            "shoulder_narrowing": {
+              "name": "Shoulder Narrowing",
+              "price": "74",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+25" }
+              }
+            },
+            "blazers_lining_replacement": {
+              "name": "Lining Replacement",
+              "price": "220",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "22",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+5" }
+              }
+            }
+          }
+        },
+        "dresses_skirts": {
+          "title": "Dresses & Skirts",
+          "services": {
+            "dresses_hem_shortening": {
+              "name": "Hem Shortening",
+              "price": "35",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" },
+                "slit_hem": { "name": "Slit Hem", "price": "+15" },
+                "hidden_stitch": { "name": "Hidden Stitch", "price": "+12" }
+              }
+            },
+            "skirt_narrowing_back_seam": {
+              "name": "Skirt Narrowing from Back Seam",
+              "price": "37",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" },
+                "zipper_back_seam": {
+                  "name": "Zipper in Back Seam",
+                  "price": "+17"
+                }
+              }
+            },
+            "skirt_narrowing_side_seams": {
+              "name": "Skirt Narrowing from Side Seams",
+              "price": "45",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" },
+                "zipper_side_seam": {
+                  "name": "Zipper in Side Seam",
+                  "price": "+17"
+                },
+                "dresses_narrowing_exceeding_4cm": {
+                  "name": "Narrowing is done from the side seams when the narrowing is more than 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "dress_narrowing_back_seam": {
+              "name": "Dress Narrowing from Back Seam",
+              "price": "39",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" },
+                "zipper_back_seam": {
+                  "name": "Zipper in Back Seam",
+                  "price": "+17"
+                }
+              }
+            },
+            "dress_narrowing_side_seams": {
+              "name": "Dress Narrowing from Side Seams",
+              "price": "49",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" },
+                "zipper_side_seam": {
+                  "name": "Zipper in Side Seam",
+                  "price": "+17"
+                },
+                "dresses_narrowing_exceeding_4cm": {
+                  "name": "Narrowing is done from the side seams when the narrowing is more than 4cm.",
+                  "price": "-"
+                }
+              }
+            },
+            "skirt_zipper_replacement": {
+              "name": "Skirt Zipper Replacement",
+              "price": "35",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            },
+            "dress_zipper_replacement": {
+              "name": "Dress Zipper Replacement",
+              "price": "46",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            },
+            "shortening_dress_straps": {
+              "name": "Shortening of Dress Straps",
+              "price": "24",
+              "subOptions": {}
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "22",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+5" }
+              }
+            }
+          }
+        },
+        "coats": {
+          "title": "Coats",
+          "services": {
+            "sleeve_shortening": {
+              "name": "Sleeve Shortening",
+              "price": "45",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" },
+                "slit_sleeves": { "name": "Slit Sleeves", "price": "+15" }
+              }
+            },
+            "sleeve_shortening_relocation_welt": {
+              "name": "Sleeve Shortening with Relocation of Welt",
+              "price": "65",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" }
+              }
+            },
+            "sleeve_shortening_relocation_zipper": {
+              "name": "Sleeve Shortening with Relocation of Zipper",
+              "price": "75",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" }
+              }
+            },
+            "coats_sleeve_narrowing": {
+              "name": "Sleeve Narrowing",
+              "price": "52",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" }
+              }
+            },
+            "waist_narrowing": {
+              "name": "Waist Narrowing",
+              "price": "58",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+16" }
+              }
+            },
+            "coats_hem_shortening": {
+              "name": "Hem Shortening",
+              "price": "62",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+14" },
+                "slit_hem": { "name": "Slit Hem", "price": "+20" }
+              }
+            },
+            "coat_with_zipper": {
+              "name": "Coat with Zipper",
+              "price": "35",
+              "subOptions": {}
+            },
+            "shoulder_narrowing": {
+              "name": "Shoulder Narrowing",
+              "price": "79",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+30" }
+              }
+            },
+            "coat_zipper_replacement": {
+              "name": "Coat Zipper Replacement",
+              "price": "53",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" },
+                "length_over_knee": {
+                  "name": "Length Over the Knee",
+                  "price": "+15"
+                }
+              }
+            },
+            "winter_jacket_zipper_replacement": {
+              "name": "Winter Jacket Zipper Replacement",
+              "price": "65",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" },
+                "length_over_knee": {
+                  "name": "Length Over the Knee",
+                  "price": "+25"
+                }
+              }
+            },
+            "coats_lining_replacement": {
+              "name": "Lining Replacement",
+              "price": "220",
+              "subOptions": {
+                "length_over_knee": {
+                  "name": "Length Over the Knee",
+                  "price": "+60"
+                }
+              }
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "24",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+6" }
+              }
+            }
+          }
+        },
+        "sports_outdoor_clothing": {
+          "title": "Sports & Outdoor Clothing",
+          "services": {
+            "sports_shirt_sleeve_shortening": {
+              "name": "Sports Shirt Sleeve Shortening",
+              "price": "29",
+              "subOptions": {}
+            },
+            "sports_top_straps_shortening": {
+              "name": "Sports Top Straps Shortening",
+              "price": "22",
+              "subOptions": {}
+            },
+            "sports_shirt_zipper_replacement": {
+              "name": "Sports Shirt Zipper Replacement",
+              "price": "42",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            },
+            "sports_pants_leg_shortening": {
+              "name": "Sports Pants Leg Shortening",
+              "price": "29",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" }
+              }
+            },
+            "sports_pants_waist_narrowing": {
+              "name": "Sports Pants Waist Narrowing",
+              "price": "37",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+10" }
+              }
+            },
+            "sports_pants_zipper_replacement": {
+              "name": "Sports Pants Zipper Replacement",
+              "price": "36",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            },
+            "patching_repair_seam": {
+              "name": "Patching/Repair from Seam",
+              "price": "22",
+              "subOptions": {
+                "with_lining": { "name": "With Lining", "price": "+6" }
+              }
+            }
+          }
+        },
+        "other_tailoring_services": {
+          "title": "Other Tailoring Services",
+          "services": {
+            "button_sewing": {
+              "name": "Button Sewing",
+              "price": "6",
+              "subOptions": {}
+            },
+            "extra_buttons": {
+              "name": "Extra Buttons",
+              "price": "4",
+              "subOptions": {}
+            }
+          }
+        }
+      }
+    },
+
+    "cobbler": {
+      "title": "Cobbler Services",
+      "groups": {
+        "boots": {
+          "title": "Boots",
+          "services": {
+            "heel_replacement": {
+              "name": "Heel Replacement",
+              "price": "28",
+              "subOptions": {}
+            },
+            "sole_replacement": {
+              "name": "Sole Replacement",
+              "price": "44",
+              "subOptions": {
+                "vibram_sole": { "name": "Vibram Sole", "price": "+10" }
+              }
+            },
+            "shoe_shine": {
+              "name": "Shoe Shine",
+              "price": "15",
+              "subOptions": {}
+            },
+            "leather_conditioning": {
+              "name": "Leather Conditioning",
+              "price": "20",
+              "subOptions": {}
+            }
+          }
+        },
+        "leather_jackets": {
+          "title": "Leather Jackets",
+          "services": {
+            "shortening_of_sleeves": {
+              "name": "Sleeve Shortening",
+              "price": "65",
+              "subOptions": {}
+            },
+            "shortening_sleeves_moving_elastic": {
+              "name": "Sleeve Shortening and Moving Elastic",
+              "price": "75",
+              "subOptions": {}
+            },
+            "narrowing_leather_jacket": {
+              "name": "Leather Jacket Narrowing",
+              "price": "95",
+              "subOptions": {}
+            },
+            "replacing_zipper": {
+              "name": "Zipper Replacement",
+              "price": "89",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            },
+            "changing_lining": {
+              "name": "Lining Replacement",
+              "price": "259",
+              "subOptions": {
+                "lining_silk": { "name": "Silk Lining", "price": "+30" }
+              }
+            }
+          }
+        },
+        "leather_pants": {
+          "title": "Leather Pants",
+          "services": {
+            "leg_shortening": {
+              "name": "Leg Shortening",
+              "price": "39",
+              "subOptions": {}
+            },
+            "leg_narrowing": {
+              "name": "Leg Narrowing",
+              "price": "49",
+              "subOptions": {}
+            },
+            "zipper_replacement_thin_leather": {
+              "name": "Zipper Replacement (Thin Leather)",
+              "price": "49",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            },
+            "zipper_replacement_thick_leather": {
+              "name": "Zipper Replacement (Thick Leather)",
+              "price": "59",
+              "subOptions": {
+                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "laundry": {
+      "title": "Laundry Services",
+      "services": {
+        "trousers": {
+          "name": "Trousers",
+          "price": "18"
+        },
+        "skirt": {
+          "name": "Skirt",
+          "price": "17",
+          "subOptions": {
+            "length_over_knee": {
+              "name": "Length Over Knee",
+              "price": "+9"
+            }
+          }
+        },
+        "suit": {
+          "name": "Suit",
+          "price": "38",
+          "subOptions": {
+            "silk_suit": {
+              "name": "Silk Suit",
+              "price": "+15"
+            },
+            "suit_with_vest": {
+              "name": "Suit with Vest",
+              "price": "46"
+            }
+          }
+        },
+        "dress_mini": {
+          "name": "Mini Dress",
+          "price": "32"
+        },
+        "dress_midi": {
+          "name": "Midi Dress",
+          "price": "39"
+        },
+        "dress_maxi": {
+          "name": "Maxi Dress",
+          "price": "45"
+        },
+        "evening_dress": {
+          "name": "Evening Dress",
+          "price": "68"
+        },
+        "jacket": {
+          "name": "Jacket / Blazer",
+          "price": "26"
+        },
+        "coat": {
+          "name": "Coat",
+          "price": "39",
+          "subOptions": {
+            "wool_coat": {
+              "name": "Wool Coat",
+              "price": "+5"
+            },
+            "length_over_knee": {
+              "name": "Length Over Knee",
+              "price": "+10"
+            }
+          }
+        },
+        "winter_jacket": {
+          "name": "Winter Jacket",
+          "price": "27",
+          "subOptions": {
+            "length_over_knee": {
+              "name": "Length Over Knee",
+              "price": "+10"
+            }
+          }
+        },
+        "down_jacket": {
+          "name": "Down Jacket",
+          "price": "39",
+          "subOptions": {
+            "length_over_knee": {
+              "name": "Length Over Knee",
+              "price": "+10"
+            }
+          }
+        },
+        "canada_goose_jacket": {
+          "name": "Canada Goose Jacket",
+          "price": "59"
+        }
+      }
+    }
+  },
+  "common": {
+    "next": "Next",
+    "submit": "Submit",
+    "pay": "Pay",
+    "back": "Back",
+    "cancel": "Cancel",
+    "success": "Your order has been submitted successfully.",
+    "loading": "Loading...",
+    "continue": "Continue",
+    "orderSuccess": "Order has been submitted successfully!",
+    "error": "There was an error. Please try again later.",
+    "emailSuccess": "Email sent successfully!"
+  }
+}

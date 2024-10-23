@@ -2,14 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { db, storage } from '@/firebase';
-import Layout from '@/components/Layout';
+import { db, storage } from '../../../firebase';
+import Layout from 'components/Layout';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { FiPaperclip, FiSearch } from 'react-icons/fi';
 import { toast } from 'react-toastify';
-import { Message, User } from '@/types';
+import { Message, User } from '../../../types';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { AiOutlineLoading } from 'react-icons/ai';
+import { useTranslations } from 'next-intl';
 
 export default function AdminChat() {
   const [users, setUsers] = useState<User[]>([]);
@@ -19,6 +20,8 @@ export default function AdminChat() {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const t = useTranslations('chats');
 
   const selectedUser = users.find((u: User) => u.id === selectedChatId);
 
@@ -172,7 +175,7 @@ export default function AdminChat() {
   };
 
   return (
-    <Layout title="Admin Dashboard">
+    <Layout title={t('admin-dashboard')}>
       <div className="flex h-screen bg-gray-100">
         {/* Left side: User list */}
         <div className="w-1/4 bg-white p-4 border-r h-full overflow-y-auto">
@@ -180,7 +183,7 @@ export default function AdminChat() {
             <FiSearch className="text-gray-500" />
             <input
               type="text"
-              placeholder="Search users"
+              placeholder={t('search-users')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="ml-2 w-full outline-none text-sm"
@@ -200,7 +203,7 @@ export default function AdminChat() {
                   <div className="flex items-center">
                     <div className="ml-3">
                       <h2 className="font-semibold text-black">
-                        Order ID: {user.id.slice(0, 5)}
+                        {t('order')} ID: {user.id.slice(0, 5)}
                       </h2>
                       <p className="text-sm text-gray-500">
                         {user.name || 'Unknown User'}
@@ -210,7 +213,7 @@ export default function AdminChat() {
                       {user.messages.some((msg) => !msg.isRead) &&
                         selectedChatId !== user.id && (
                           <p className="text-sm text-red-500 font-semibold">
-                            Unread messages
+                            {t('new-messages')}
                           </p>
                         )}
                     </div>
@@ -218,7 +221,7 @@ export default function AdminChat() {
                 </div>
               ))
             ) : (
-              <p className="text-gray-500">No users found.</p>
+              <p className="text-gray-500">{t('no-users')}</p>
             )}
           </div>
         </div>
@@ -265,13 +268,13 @@ export default function AdminChat() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-gray-500">No messages yet.</p>
+                  <p className="text-gray-500">{t('no-messages')}</p>
                 )}
               </div>
             </>
           ) : (
             <div className="flex items-center justify-center h-full">
-              <h2 className="text-gray-500">Select a user to start chatting</h2>
+              <h2 className="text-gray-500">{t('select-user-text')}</h2>
             </div>
           )}
         </div>
@@ -296,7 +299,7 @@ export default function AdminChat() {
             type="text"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
+            placeholder={t('type-message')}
             className="flex-1 bg-gray-200 p-2 rounded-lg outline-none"
             onKeyDown={handleSendOnEnter}
           />
