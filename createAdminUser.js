@@ -14,7 +14,8 @@ const createAdminUser = async (email, password) => {
       password: password,
       emailVerified: true,
       displayName: 'Admin',
-      disabled: false
+      disabled: false,
+      isAdmin: true
     });
 
     await db.collection('users').doc(user.uid).set({
