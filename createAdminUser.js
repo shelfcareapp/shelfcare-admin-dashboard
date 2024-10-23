@@ -18,20 +18,13 @@ const createAdminUser = async (email, password) => {
     });
 
     await db.collection('users').doc(user.uid).set({
-      email: email,
-      firstLogin: true,
-      createdAt: admin.firestore.FieldValue.serverTimestamp(),
-      isAdmin: true
+      firstLogin: true
     });
 
-    console.log(
-      'Admin user created and added to "admins" collection:',
-      user.uid
-    );
+    console.log('Admin user created:', user.uid);
   } catch (error) {
     console.log('Error creating admin user:', error);
   }
 };
 
-// Call the function with the email and password of the admin user you want to create
 createAdminUser('maija.tunturi@shelfcare.app', 'changeMe123');
