@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SelectedServices } from 'types';
-import { v4 as uuidv4 } from 'uuid'; // Use UUID library to generate unique IDs
+import { v4 as uuidv4 } from 'uuid';
 
 interface ServiceSelectionState {
   selectedServices: SelectedServices[];
@@ -16,6 +16,17 @@ const serviceSelectionSlice = createSlice({
   name: 'serviceSelection',
   initialState,
   reducers: {
+    setSelectedServices: (state, action: PayloadAction<SelectedServices[]>) => {
+      state.selectedServices = action.payload;
+      state.totalPrice = state.selectedServices.reduce(
+        (total, service) =>
+          total +
+          service.price *
+            service.quantity *
+            (1 - (service.discount || 0) / 100),
+        0
+      );
+    },
     addSelectedService: (
       state,
       action: PayloadAction<Omit<SelectedServices, 'id'>>
@@ -69,7 +80,8 @@ export const {
   addSelectedService,
   removeSelectedService,
   updateSelectedService,
-  setTotalPrice
+  setTotalPrice,
+  setSelectedServices
 } = serviceSelectionSlice.actions;
 
 export const selectSelectedServices = (state: any) =>

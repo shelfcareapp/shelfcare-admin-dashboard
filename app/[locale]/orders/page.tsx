@@ -15,11 +15,11 @@ import {
 } from 'store/slices/orders-slice';
 import {
   deleteOrder,
-  updateOrder,
+  // updateOrder,
   updatePaymentStatus
 } from 'store/slices/order-selection-slice';
 import {
-  setSelectedServices,
+  // setSelectedServices,
   selectSelectedServices
 } from 'store/slices/service-selection-slice';
 import { Order, SelectedServices } from 'types';
@@ -38,7 +38,7 @@ export default function OrdersPage() {
     null
   );
   const [currentOrderServices, setCurrentOrderServices] =
-    useState<SelectedServices>({});
+    useState<SelectedServices>();
   const [pickupTime, setPickupTime] = useState<string | null>(null);
   const [deliveryTime, setDeliveryTime] = useState<string | null>(null);
   const [reloadOrders, setReloadOrders] = useState<boolean>(false);
@@ -94,10 +94,11 @@ export default function OrdersPage() {
       pickupTime,
       deliveryTime,
       totalPrice: finalPrice
-    } as Order;
+    } as unknown as Partial<Order>;
+    console.log(orderData);
 
-    await dispatch(updateOrder({ orderId, orderData }));
-    dispatch(setSelectedServices(currentOrderServices));
+    // await dispatch(updateOrder({ orderId, orderData }));
+    // dispatch(setSelectedServices(currentOrderServices));
     setEditOrderId(null);
     setReloadOrders(true);
   };

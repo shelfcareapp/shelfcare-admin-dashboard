@@ -17,11 +17,9 @@ import {
 } from 'store/slices/service-selection-slice';
 import { fetchNonAdminUsers, selectUsers } from 'store/slices/users-slice';
 import { createOrder } from 'store/slices/order-selection-slice';
-import { toast } from 'react-toastify';
 
 const NewOrderPage = () => {
   const [step, setStep] = useState(1);
-  const [discount, setDiscount] = useState(0);
   const dispatch = useAppDispatch();
 
   const selectedUser = useAppSelector(selectSelectedUser);
@@ -36,11 +34,6 @@ const NewOrderPage = () => {
   }, [dispatch]);
 
   const handleConfirmOrder = async () => {
-    if (!selectedUser) {
-      toast.error('Please select a user first.');
-      return;
-    }
-
     dispatch(createOrder({ selectedUser, selectedServices, totalPrice })).then(
       () => {
         setStep(1);

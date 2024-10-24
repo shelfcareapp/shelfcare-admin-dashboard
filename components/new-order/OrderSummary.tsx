@@ -19,7 +19,7 @@ interface OrderSummaryProps {
     phone: string;
     postalCode: string;
   };
-  onConfirmOrder: (pickupDate: Date, returnDate: Date) => void;
+  onConfirmOrder: () => void;
   onBackClick: () => void;
 }
 
@@ -27,7 +27,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   selectedServices,
   totalPrice,
   customer,
-  onBackClick
+  onBackClick,
+  onConfirmOrder
 }) => {
   const dispatch = useAppDispatch();
   const deliveryFee = 10;
@@ -71,6 +72,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     return message;
   };
 
+  console.log('customer', customer);
   const handleSendMessage = () => {
     const message = generateReceiptMessage();
     if (!message.trim()) return;
@@ -84,6 +86,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         sender
       })
     );
+
+    onConfirmOrder();
 
     toast.success('Order sent successfully!');
   };

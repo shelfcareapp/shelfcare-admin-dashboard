@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CiGlobe } from 'react-icons/ci';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
