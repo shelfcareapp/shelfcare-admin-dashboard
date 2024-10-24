@@ -39,7 +39,6 @@ export default function OrdersPage() {
   );
   const [currentOrderServices, setCurrentOrderServices] =
     useState<SelectedServices>({});
-
   const [pickupTime, setPickupTime] = useState<string | null>(null);
   const [deliveryTime, setDeliveryTime] = useState<string | null>(null);
   const [reloadOrders, setReloadOrders] = useState<boolean>(false);
@@ -59,12 +58,15 @@ export default function OrdersPage() {
     }
   }, [editOrderId, orders, reloadOrders]);
 
-  const updateServiceQuantity = (serviceKey: string, newQuantity: number) => {
+  const updateServiceDetails = (
+    serviceKey: string,
+    updatedData: Partial<SelectedServices>
+  ) => {
     setCurrentOrderServices((prevServices) => ({
       ...prevServices,
       [serviceKey]: {
         ...prevServices[serviceKey],
-        quantity: newQuantity
+        ...updatedData
       }
     }));
   };
@@ -141,8 +143,6 @@ export default function OrdersPage() {
     await dispatch(updatePaymentStatus({ orderId, status }));
     setReloadOrders(true);
   };
-
-  console.log('orders', orders);
 
   return (
     <Layout title="Orders">
@@ -228,12 +228,40 @@ export default function OrdersPage() {
                                         ?.quantity || 0
                                     }
                                     onChange={(e) =>
-                                      updateServiceQuantity(
-                                        serviceKey,
-                                        parseInt(e.target.value, 10)
-                                      )
+                                      updateServiceDetails(serviceKey, {
+                                        quantity: parseInt(e.target.value, 10)
+                                      })
                                     }
                                     min="1"
+                                  />
+                                  <input
+                                    type="number"
+                                    placeholder="Discount"
+                                    className="w-20 p-1 ml-2 border border-gray-300 rounded"
+                                    value={
+                                      currentOrderServices[serviceKey]
+                                        ?.discount || 0
+                                    }
+                                    onChange={(e) =>
+                                      updateServiceDetails(serviceKey, {
+                                        discount: parseInt(e.target.value, 10)
+                                      })
+                                    }
+                                    min="0"
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="Additional Info"
+                                    className="w-40 p-1 ml-2 border border-gray-300 rounded"
+                                    value={
+                                      currentOrderServices[serviceKey]
+                                        ?.additionalInfo || ''
+                                    }
+                                    onChange={(e) =>
+                                      updateServiceDetails(serviceKey, {
+                                        additionalInfo: e.target.value
+                                      })
+                                    }
                                   />
                                   <span>
                                     x {currentOrderServices[serviceKey]?.price}€
@@ -364,7 +392,7 @@ export default function OrdersPage() {
           title="Add New Service"
           onClose={() => setShowModalForOrderId(null)}
           isOpen={showModalForOrderId === editOrderId}
-          onConfirm={handleConfirmNewService} // Handle the confirm action
+          onConfirm={handleConfirmNewService}
         >
           <div className="space-y-4">
             <ServiceSelection />

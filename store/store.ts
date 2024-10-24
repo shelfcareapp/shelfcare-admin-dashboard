@@ -4,6 +4,7 @@ import usersReducer from './slices/users-slice';
 import serviceSelectionReducer from './slices/service-selection-slice';
 import orderSelectionReducer from './slices/order-selection-slice';
 import ordersReducer from './slices/orders-slice';
+import chatsReducer from './slices/chats-slice';
 
 export const store = configureStore({
   reducer: {
@@ -11,7 +12,8 @@ export const store = configureStore({
     serviceSelection: serviceSelectionReducer,
     order: orderSelectionReducer,
     users: usersReducer,
-    orders: ordersReducer
+    orders: ordersReducer,
+    chats: chatsReducer
   }
 });
 

@@ -8,12 +8,25 @@ export interface Message {
   isRead?: boolean;
 }
 
+export type Chat = {
+  id: string;
+  userId: string;
+  messages: any[];
+  welcomeMessageSent?: boolean;
+  createdAt: any;
+  name: string;
+  email: string;
+  isAutoReply?: boolean;
+};
+
 export interface User {
   id: string;
-  chatName: string;
-  email: string;
   name: string;
-  messages: Message[];
+  email: string;
+  address: string;
+  phone: string;
+  entranceInfo: string;
+  postalCode: string;
 }
 
 export interface SelectableUser {
@@ -26,10 +39,21 @@ export interface SelectableUser {
   postalCode: string;
 }
 
-export type SelectedServices = Record<
-  string,
-  { parent: string; price: number; quantity: number; name: string }
->;
+export type ServiceSubOptions = {
+  subOptionKey: string;
+  price: number;
+};
+
+export type SelectedServices = {
+  id: string;
+  parent: string;
+  price: number;
+  quantity: number;
+  name: string;
+  discount?: number;
+  additionalInfo?: string;
+  subOptions?: ServiceSubOptions[];
+};
 
 export interface Order {
   id: string;
@@ -38,7 +62,7 @@ export interface Order {
   customerName: string;
   customerAddress: string;
   customerPhone: string;
-  services: SelectedServices;
+  services: SelectedServices[];
   totalPrice: number;
   status: string;
   paymentEnabled: boolean;

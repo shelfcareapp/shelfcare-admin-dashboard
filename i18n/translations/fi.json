@@ -14,7 +14,8 @@
     "order": "Tilaus",
     "type-message": "Kirjoita viesti...",
     "no-users": "Ei käyttäjiä",
-    "select-user-text": "Valitse käyttäjä keskustellaksesi"
+    "select-user-text": "Valitse käyttäjä keskustellaksesi",
+    "unread": "Lukemattomat"
   },
   "new-order": {
     "title": "Uusi tilaus",
@@ -50,7 +51,11 @@
     "title": "Hinnasto",
     "disclaimer": "Hinnat ovat alkaen-hintoja ja voivat vaihdella palvelun monimutkaisuuden ja käytettyjen materiaalien mukaan. Lisämaksuja saattaa aiheutua.",
     "quantity": "Määrä",
+    "discount": "Alennus (%)",
+    "additional-info": "Lisätiedot",
     "custom-service": "Räätälöity palvelu",
+    "select-sub-options": "Valitse alavaihtoehdot",
+    "add-service": "Lisää palvelu",
     "price": "Hinta",
     "add": "Lisää",
     "categories": {

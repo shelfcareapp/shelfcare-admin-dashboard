@@ -8,6 +8,7 @@ import { useLocale } from 'next-intl';
 import { useRouter } from '../hooks/router';
 import { usePathname } from '../modules/i18n';
 import { config } from '../config';
+import { useOutsideClick } from 'hooks/use-outside-click';
 
 const { locales } = config.i18n;
 
@@ -20,25 +21,13 @@ const LanguageSwitcher = () => {
   const [value, setValue] = useState(currentLocale);
   const dropdownRef = useRef(null);
 
+  useOutsideClick(dropdownRef, () => setIsOpen(false));
+
   const handleLanguageChange = (locale) => {
     setValue(locale);
     router.replace(`/${locale}${pathname}?${searchParams.toString()}`);
     setIsOpen(false);
   };
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [dropdownRef]);
 
   return (
     <div ref={dropdownRef} className="relative">

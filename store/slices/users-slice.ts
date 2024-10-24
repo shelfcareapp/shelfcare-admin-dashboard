@@ -23,13 +23,23 @@ export const fetchNonAdminUsers = createAsyncThunk(
 
     const users = usersSnapshot.docs.map((doc) => {
       const data = doc.data();
+      delete data.birthday;
       return convertTimestampToISO({
         id: doc.id,
         ...data
       });
     });
 
-    return users as SelectableUser[];
+    const filteredUsers = users
+      .filter((user) => user.email && !user.isAdmin)
+      .reduce((unique, user) => {
+        if (!unique.some((u) => u.email === user.email)) {
+          unique.push(user);
+        }
+        return unique;
+      }, []);
+
+    return filteredUsers as SelectableUser[];
   }
 );
 

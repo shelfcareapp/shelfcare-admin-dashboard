@@ -14,7 +14,8 @@
     "order": "Order",
     "type-message": "Type a message...",
     "no-users": "No users found",
-    "select-user-text": "Select a user to start chatting"
+    "select-user-text": "Select a user to start chatting",
+    "unread": "unread message(s)"
   },
   "new-order": {
     "title": "New order",
@@ -50,7 +51,11 @@
     "title": "Pricing Guidelines",
     "disclaimer": "The prices listed are starting prices and may vary based on the complexity and materials involved in each service. Additional charges may apply.",
     "quantity": "Quantity",
+    "discount": "Discount (%)",
+    "additional-info": "Additional Info",
     "custom-service": "Custom Service",
+    "select-sub-options": "Select sub-options",
+    "add-service": "Add Service",
     "price": "Price",
     "add": "Add",
     "categories": {

@@ -1,13 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { db } from '../../firebase';
-import {
-  collection,
-  addDoc,
-  updateDoc,
-  doc,
-  getDoc,
-  deleteDoc
-} from 'firebase/firestore';
+import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { Order, SelectedServices } from 'types';
 
@@ -26,16 +19,13 @@ export const createOrder = createAsyncThunk(
   async ({
     selectedUser,
     selectedServices,
-    totalPrice,
-    discount
+    totalPrice
   }: {
     selectedUser: any;
-    selectedServices: SelectedServices;
+    selectedServices: SelectedServices[];
     totalPrice: number;
-    discount: number;
   }) => {
-    const discountAmount = totalPrice * (discount / 100);
-    const finalPrice = totalPrice - discountAmount + 10;
+    const finalPrice = totalPrice + 10;
 
     const orderData = {
       customerId: selectedUser.id,
@@ -69,26 +59,7 @@ export const updateOrder = createAsyncThunk(
   }
 );
 
-export const deleteOrder = createAsyncThunk(
-  'order/deleteOrder',
-  async (orderId: string) => {
-    await deleteDoc(doc(db, 'orders', orderId));
-
-    toast.success('Order deleted successfully!');
-  }
-);
-
-export const updatePaymentStatus = createAsyncThunk(
-  'order/updatePaymentStatus',
-  async (data: { orderId: string; status: string }) => {
-    const orderRef = doc(db, 'orders', data.orderId);
-    await updateDoc(orderRef, {
-      paymentStatus: data.status
-    });
-
-    toast.success('Order updated successfully!');
-  }
-);
+// Other async thunks for deleting and updating order payment status
 
 const orderSlice = createSlice({
   name: 'order',
@@ -107,54 +78,6 @@ const orderSlice = createSlice({
       (state, action: PayloadAction<any>) => {
         state.loading = false;
         state.error = action.payload || 'Failed to create order';
-        toast.error('Failed to send the request. Please try again.');
-      }
-    );
-
-    builder.addCase(updateOrder.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(updateOrder.fulfilled, (state) => {
-      state.loading = false;
-    });
-    builder.addCase(
-      updateOrder.rejected,
-      (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload || 'Failed to update order';
-        toast.error('Failed to send the request. Please try again.');
-      }
-    );
-
-    builder.addCase(deleteOrder.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(deleteOrder.fulfilled, (state) => {
-      state.loading = false;
-    });
-    builder.addCase(
-      deleteOrder.rejected,
-      (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload || 'Failed to delete order';
-        toast.error('Failed to send the request. Please try again.');
-      }
-    );
-
-    builder.addCase(updatePaymentStatus.pending, (state) => {
-      state.loading = true;
-      state.error = null;
-    });
-    builder.addCase(updatePaymentStatus.fulfilled, (state) => {
-      state.loading = false;
-    });
-    builder.addCase(
-      updatePaymentStatus.rejected,
-      (state, action: PayloadAction<any>) => {
-        state.loading = false;
-        state.error = action.payload || 'Failed to update payment status';
         toast.error('Failed to send the request. Please try again.');
       }
     );

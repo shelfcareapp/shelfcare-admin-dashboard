@@ -1,6 +1,6 @@
 'use client';
 
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 import {
   Disclosure,
   DisclosureButton,
@@ -16,14 +16,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useEffect, useRef, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { toast } from 'react-toastify';
-import { User } from '../types';
-import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
-import {
-  SelectedChatProvider,
-  useSelectedChat
-} from 'context/SelectedChatContext';
+import { useAppDispatch, useAppSelector } from 'hooks/use-store';
+import { fetchChats, setSelectedChatId } from 'store/slices/chats-slice';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslations } from 'next-intl';
+import { useOutsideClick } from 'hooks/use-outside-click';
 
 export interface LayoutProps {
   title: string;
@@ -36,13 +33,17 @@ function classNames(...classes: string[]) {
 
 function LayoutComponent({ title, children }: LayoutProps) {
   const [user, loading] = useAuthState(auth);
-  const { selectedChatId, setSelectedChatId } = useSelectedChat();
-  const [unreadUserMessages, setUnreadUserMessages] = useState<User[]>([]);
-
+  const { chats } = useAppSelector((state) => state.chats);
   const [notificationOpen, setNotificationOpen] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const bellRef = useRef(null);
   const t = useTranslations('header');
+
+  useOutsideClick(bellRef, () => {
+    setNotificationOpen(false);
+  });
 
   useEffect(() => {
     if (!loading && !user) {
@@ -51,51 +52,34 @@ function LayoutComponent({ title, children }: LayoutProps) {
   }, [user, loading, router]);
 
   useEffect(() => {
-    const usersRef = collection(db, 'chats');
-    const unsubscribe = onSnapshot(usersRef, (snapshot) => {
-      const fetchedUsers = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      })) as User[];
+    dispatch(fetchChats());
+  }, [dispatch]);
 
-      const unreadUsers = fetchedUsers.filter((user) => {
-        return user.messages.some((msg) => !msg.isRead);
-      });
-
-      setUnreadUserMessages(unreadUsers);
-
-      if (!selectedChatId && unreadUsers.length > 0) {
-        setSelectedChatId(unreadUsers[0].id);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [selectedChatId]);
+  const unreadChats = chats.filter((chat) =>
+    chat.messages.some((msg) => !msg.isRead)
+  );
 
   const handleNotificationClick = () => {
     setNotificationOpen(!notificationOpen);
   };
 
   const handleNotificationItemClick = async (chatId: string) => {
-    setSelectedChatId(chatId);
+    if (isUpdating) return;
 
-    const user = unreadUserMessages.find((user) => user.id === chatId);
-    if (!user) return;
+    setIsUpdating(true);
+    dispatch(setSelectedChatId(chatId));
+
+    const chat = unreadChats.find((chat) => chat.id === chatId);
+    if (!chat) return;
 
     try {
-      const updatedMessages = user.messages.map((msg) => ({
-        ...msg,
-        isRead: true
-      }));
-
-      const chatRef = doc(db, `chats/${chatId}`);
-      await updateDoc(chatRef, { messages: updatedMessages });
-
       setNotificationOpen(false);
-      router.push('/');
+      router.push(`/chats`);
     } catch (error) {
       console.error('Error updating messages:', error);
       toast.error('Failed to mark messages as read');
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -155,9 +139,9 @@ function LayoutComponent({ title, children }: LayoutProps) {
                   >
                     <span className="sr-only">View notifications</span>
                     <BellIcon aria-hidden="true" className="h-6 w-6" />
-                    {unreadUserMessages.length > 0 && (
+                    {unreadChats.length > 0 && (
                       <span className="absolute top-0 right-0 h-4 w-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">
-                        {unreadUserMessages.length}
+                        {unreadChats.length}
                       </span>
                     )}
                   </button>
@@ -169,39 +153,36 @@ function LayoutComponent({ title, children }: LayoutProps) {
                         New Messages
                       </h3>
                       <ul>
-                        {unreadUserMessages.length > 0 ? (
-                          unreadUserMessages.map((user: User) => {
-                            // display only unread messages
-                            return user.messages.some((msg) => !msg.isRead) ? (
-                              <li
-                                key={user.id}
-                                className="flex items-center space-x-2 py-2 cursor-pointer hover:bg-gray-100"
-                                onClick={() =>
-                                  handleNotificationItemClick(user.id)
-                                }
-                              >
-                                <div className="flex-1">
-                                  <h4 className="font-semibold">
-                                    Order ID: {user.id.slice(0, 5)}
-                                  </h4>
-                                  <p className="text-sm text-gray-500">
-                                    {user.name || 'Unknown User'}
-                                  </p>
-                                  <p className="text-sm text-gray-500">
-                                    {user.email}
-                                  </p>
-                                </div>
-                                <div className="flex items-center">
-                                  <span className="text-xs font-semibold bg-red-500 text-white px-2 py-1 rounded-full">
-                                    {
-                                      user.messages.filter((msg) => !msg.isRead)
-                                        .length
-                                    }
-                                  </span>
-                                </div>
-                              </li>
-                            ) : null;
-                          })
+                        {unreadChats.length > 0 ? (
+                          unreadChats.map((chat) => (
+                            <li
+                              key={chat.id}
+                              className="flex items-center space-x-2 py-2 cursor-pointer hover:bg-gray-100"
+                              onClick={() =>
+                                handleNotificationItemClick(chat.id)
+                              }
+                            >
+                              <div className="flex-1">
+                                <h4 className="font-semibold">
+                                  Order ID: {chat.id.slice(0, 5)}
+                                </h4>
+                                <p className="text-sm text-gray-500">
+                                  {chat.name || 'Unknown User'}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {chat.email || 'No email'}
+                                </p>
+                              </div>
+                              <div className="flex items-center">
+                                <span className="text-xs font-semibold bg-red-500 text-white px-2 py-1 rounded-full">
+                                  {
+                                    chat.messages.filter((msg) => !msg.isRead)
+                                      .length
+                                  }
+                                </span>
+                              </div>
+                            </li>
+                          ))
                         ) : (
                           <li className="text-gray-500">No new messages.</li>
                         )}
@@ -322,9 +303,5 @@ function LayoutComponent({ title, children }: LayoutProps) {
 }
 
 export default function Layout({ title, children }: LayoutProps) {
-  return (
-    <SelectedChatProvider>
-      <LayoutComponent title={title}>{children}</LayoutComponent>
-    </SelectedChatProvider>
-  );
+  return <LayoutComponent title={title}>{children}</LayoutComponent>;
 }

@@ -39,7 +39,7 @@ const UserSelection = ({
             <MenuItem
               key={user.id}
               as="button"
-              className="block w-full px-4 py-2 text-left text-gray-800 text-sm hover:bg-gray-100 hover:text-primary-dark transition-colors"
+              className="block w-full px-4 py-2 text-left text-gray-800 text-sm hover:bg-gray-100 hover:text-primary-dark transition-colors border-b"
               onClick={() => handleUserSelect(user)}
             >
               {user.name}, {user.email}

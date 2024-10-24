@@ -28,4 +28,5 @@ const createAdminUser = async (email, password) => {
   }
 };
 
-createAdminUser('maija.tunturi@shelfcare.app', 'changeMe123');
+createAdminUser('gyameraj@gmail.com', 'changeMe123');
+// createAdminUser('maija.tunturi@shelfcare.app', 'changeMe123');

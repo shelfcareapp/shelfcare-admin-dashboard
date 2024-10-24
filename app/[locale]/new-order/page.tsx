@@ -41,11 +41,11 @@ const NewOrderPage = () => {
       return;
     }
 
-    dispatch(
-      createOrder({ selectedUser, selectedServices, totalPrice, discount })
-    ).then(() => {
-      setStep(1);
-    });
+    dispatch(createOrder({ selectedUser, selectedServices, totalPrice })).then(
+      () => {
+        setStep(1);
+      }
+    );
   };
 
   return (
@@ -83,8 +83,6 @@ const NewOrderPage = () => {
           <OrderSummary
             selectedServices={selectedServices}
             totalPrice={totalPrice}
-            discount={discount}
-            setDiscount={setDiscount}
             customer={{
               id: selectedUser.id,
               name: selectedUser.name,

@@ -1,4 +1,3 @@
-// laundryKeys.js
 export const laundryKeys = [
   'trousers',
   'skirt',

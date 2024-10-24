@@ -1,116 +1,44 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { collection, doc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { db, storage } from '../../../firebase';
+import { useEffect } from 'react';
+import {
+  fetchChats,
+  sendMessage,
+  setSelectedChatId,
+  setMessage,
+  setSearchTerm,
+  setUnreadMessages,
+  updateIsRead
+} from 'store/slices/chats-slice';
 import Layout from 'components/Layout';
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
 import { FiPaperclip, FiSearch } from 'react-icons/fi';
-import { toast } from 'react-toastify';
-import { Message, User } from '../../../types';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import { AiOutlineLoading } from 'react-icons/ai';
 import { useTranslations } from 'next-intl';
+import { Chat } from 'types';
+import { useAppDispatch, useAppSelector } from 'hooks/use-store';
+import { useChatScroll } from 'hooks/use-chat-scroll';
 
 export default function AdminChat() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [selectedChatId, setSelectedChatId] = useState<string | null>(null);
-  const [message, setMessage] = useState<string>('');
-  const [images, setImages] = useState<File[] | null>(null);
-  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const dispatch = useAppDispatch();
+  const { chats, selectedChatId, message, uploading, searchTerm } =
+    useAppSelector((state) => state.chats);
+  const chatRef = useChatScroll(chats);
 
+  const selectedUserChat: Chat | undefined = chats.find(
+    (u: Chat) => u.id === selectedChatId
+  );
   const t = useTranslations('chats');
 
-  const selectedUser = users.find((u: User) => u.id === selectedChatId);
-
   useEffect(() => {
-    const usersRef = collection(db, 'chats');
-    const unsubscribe = onSnapshot(usersRef, (snapshot) => {
-      const fetchedUsers = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      })) as User[];
+    dispatch(fetchChats());
+  }, [dispatch]);
 
-      setUsers(fetchedUsers);
-
-      if (!selectedUser && fetchedUsers.length > 0) {
-        setSelectedChatId(fetchedUsers[0].id);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [selectedChatId]);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      console.log(e.target.files);
-      const filesArray = Array.from(e.target.files);
-      setImages((prev) => (prev ? [...prev, ...filesArray] : filesArray));
-
-      const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
-      setImagePreviews((prev) => [...prev, ...newPreviews]);
-    }
-  };
-
-  const removeImage = (index: number) => {
-    if (images) {
-      const updatedImages = images.filter((_, i) => i !== index);
-      const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
-      setImages(updatedImages);
-      setImagePreviews(updatedPreviews);
-    }
-  };
-
-  const handleSendMessage = async () => {
-    if (!message.trim() && (!images || images.length === 0)) return;
-
-    const newMessage: Message = {
-      sender: 'Admin',
-      content: message.trim(),
-      time: new Date().toLocaleTimeString(),
-      imageUrls: [],
-      isRead: false,
-      isAdmin: true
-    };
-
-    setUploading(true);
-
-    let uploadedImageUrls: string[] = [];
-    if (images && images.length > 0) {
-      try {
-        const uploadPromises = images.map(async (image) => {
-          const imageRef = ref(storage, `chats-images/admin/${image.name}`);
-          await uploadBytes(imageRef, image);
-          const downloadUrl = await getDownloadURL(imageRef);
-          return downloadUrl;
-        });
-
-        uploadedImageUrls = await Promise.all(uploadPromises);
-
-        setImages(null);
-        setImagePreviews([]);
-
-        newMessage.imageUrls = uploadedImageUrls;
-      } catch (error) {
-        console.error('Error uploading images:', error);
-        toast.error('Error uploading images.');
-      }
-    }
-
-    const updatedMessages = [...selectedUser!.messages, newMessage];
-    const chatDocRef = doc(db, 'chats', selectedUser!.id);
-
-    try {
-      await updateDoc(chatDocRef, { messages: updatedMessages });
-      setMessage('');
-    } catch (error) {
-      console.error('Error sending message:', error);
-      toast.error('Error sending message.');
-    } finally {
-      setUploading(false);
-    }
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    dispatch(
+      sendMessage({ selectedUserId: selectedChatId!, message, images: [] })
+    );
   };
 
   const handleSendOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -120,64 +48,23 @@ export default function AdminChat() {
     }
   };
 
-  const handleSelectUser = async (user: User) => {
-    setSelectedChatId(user.id);
-
-    const updatedMessages = user.messages.map((msg) => {
-      if (!msg.isRead) {
-        return { ...msg, isRead: true };
-      }
-      return msg;
-    });
-
-    const updatedUser = { ...user, messages: updatedMessages };
-
-    try {
-      const chatRef = doc(db, 'chats', user.id);
-      await updateDoc(chatRef, { messages: updatedMessages });
-
-      const updatedUsers = users.map((u: User) =>
-        u.id === user.id ? updatedUser : u
-      );
-      setUsers(updatedUsers);
-    } catch (error) {
-      console.error('Error marking messages as read:', error);
-    }
-  };
-
-  const filteredUsers = users.filter((u: User) =>
-    u.name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredUserChats = chats.filter((u: Chat) =>
+    u.name
+      ? u.name.toLowerCase().includes(searchTerm.toLowerCase())
+      : u.id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const showImagePreviews = () => {
-    if (imagePreviews.length > 0) {
-      return (
-        <div className="flex flex-wrap items-center gap-2 mb-4">
-          {imagePreviews.map((url, i) => (
-            <div key={i} className="relative">
-              <img
-                src={url}
-                alt={`Image ${i + 1}`}
-                className="w-20 h-20 object-cover rounded-md border border-gray-200"
-              />
-              <button
-                onClick={() => removeImage(i)}
-                className="absolute top-0 right-0 bg-white rounded-full text-red-500 hover:text-red-700 p-1"
-                style={{ transform: 'translate(50%, -50%)' }}
-              >
-                ✕
-              </button>
-            </div>
-          ))}
-        </div>
-      );
-    }
+  const unreadMessages = (chatId: string) => {
+    const chat = chats.find((c: Chat) => c.id === chatId);
+    if (!chat) return 0;
+
+    return chat.messages.filter((m) => m.sender !== 'admin' && !m.isRead)
+      .length;
   };
 
   return (
     <Layout title={t('admin-dashboard')}>
       <div className="flex h-screen bg-gray-100">
-        {/* Left side: User list */}
         <div className="w-1/4 bg-white p-4 border-r h-full overflow-y-auto">
           <div className="flex items-center bg-white p-2 rounded-lg shadow">
             <FiSearch className="text-gray-500" />
@@ -185,37 +72,42 @@ export default function AdminChat() {
               type="text"
               placeholder={t('search-users')}
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => dispatch(setSearchTerm(e.target.value))}
               className="ml-2 w-full outline-none text-sm"
             />
           </div>
 
           <div className="mt-4 flex flex-col">
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user: User) => (
+            {filteredUserChats.length > 0 ? (
+              filteredUserChats.map((chat: Chat) => (
                 <div
-                  key={user.id}
+                  key={chat.id}
                   className={`p-4 bg-white my-2 rounded-lg shadow cursor-pointer ${
-                    selectedUser?.id === user.id ? 'bg-gray-300' : ''
+                    selectedUserChat?.id === chat.id ? 'bg-gray-300' : ''
                   }`}
-                  onClick={() => handleSelectUser(user)}
+                  onClick={async () => {
+                    dispatch(setSelectedChatId(chat.id));
+                    dispatch(setUnreadMessages(chat.id));
+
+                    if (unreadMessages(chat.id) > 0) {
+                      dispatch(updateIsRead(chat.id)); // Correctly dispatch the action to mark messages as read
+                    }
+                  }}
                 >
                   <div className="flex items-center">
-                    <div className="ml-3">
+                    <div className="">
                       <h2 className="font-semibold text-black">
-                        {t('order')} ID: {user.id.slice(0, 5)}
+                        {t('order')} ID: {chat.id.slice(0, 5)}
                       </h2>
                       <p className="text-sm text-gray-500">
-                        {user.name || 'Unknown User'}
+                        {chat.name || 'Unknown User'}
                       </p>
-                      <p className="text-sm text-gray-500">{user.email}</p>
-
-                      {user.messages.some((msg) => !msg.isRead) &&
-                        selectedChatId !== user.id && (
-                          <p className="text-sm text-red-500 font-semibold">
-                            {t('new-messages')}
-                          </p>
-                        )}
+                      <p className="text-sm text-gray-500">{chat.email}</p>
+                      {unreadMessages(chat.id) > 0 && (
+                        <p className="text-red-700 mt-2 font-semibold">
+                          {t('unread')}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -226,94 +118,74 @@ export default function AdminChat() {
           </div>
         </div>
 
-        {/* Right side: Chat Area */}
-        <div className="w-3/4 flex flex-col bg-gray-50 h-full">
-          {selectedUser ? (
-            <>
+        <div
+          className="flex flex-col w-full"
+          ref={chatRef}
+          style={{ maxHeight: 'calc(100vh - 150px)' }}
+        >
+          <div className="flex flex-col bg-gray-50 h-full">
+            {selectedUserChat ? (
               <div className="flex-1 p-4 overflow-y-auto">
-                {selectedUser.messages.length > 0 ? (
-                  selectedUser.messages.map((msg: Message, index: number) => (
+                {selectedUserChat.messages.map((msg, index) => (
+                  <div
+                    key={msg.id || index}
+                    className={`mb-4 ${
+                      msg.sender === 'Admin' ? 'text-right' : 'text-left'
+                    }`}
+                  >
                     <div
-                      key={msg.id || index}
-                      className={`mb-4 ${
-                        msg.sender === 'Admin' ? 'text-right' : 'text-left'
+                      className={`inline-block p-2 rounded-lg shadow ${
+                        msg.sender === 'Admin'
+                          ? 'bg-primary text-white'
+                          : 'bg-gray-200'
                       }`}
                     >
-                      <div
-                        className={`inline-block p-2 rounded-lg shadow ${
-                          msg.sender === 'Admin'
-                            ? 'bg-primary text-white'
-                            : 'bg-gray-200'
-                        }`}
-                      >
-                        {msg.imageUrls && msg.imageUrls.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-2">
-                            {msg.imageUrls.map((url, i) => (
-                              <img
-                                key={i}
-                                src={url}
-                                alt={`Sent image ${i + 1}`}
-                                className="rounded-lg max-w-xs"
-                              />
-                            ))}
-                          </div>
-                        )}
-
-                        {msg.content && <p>{msg.content}</p>}
-
-                        <span className="text-xs text-gray-300">
-                          {msg.time}
-                        </span>
-                      </div>
+                      {msg.content && <p>{msg.content}</p>}
+                      <span className="text-xs text-gray-300">{msg.time}</span>
                     </div>
-                  ))
-                ) : (
-                  <p className="text-gray-500">{t('no-messages')}</p>
-                )}
+                  </div>
+                ))}
               </div>
-            </>
-          ) : (
-            <div className="flex items-center justify-center h-full">
-              <h2 className="text-gray-500">{t('select-user-text')}</h2>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Chat input */}
-      <div className="p-4 bg-white shadow flex flex-col z-10">
-        {showImagePreviews()}
-        <div className="p-4 bg-gray-100 shadow flex items-center sticky bottom-0">
-          <label htmlFor="file-upload" className="cursor-pointer">
-            <FiPaperclip className="text-gray-500 mr-2" />
-          </label>
-          <input
-            type="file"
-            id="file-upload"
-            className="hidden"
-            onChange={handleFileChange}
-            multiple
-          />
-
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder={t('type-message')}
-            className="flex-1 bg-gray-200 p-2 rounded-lg outline-none"
-            onKeyDown={handleSendOnEnter}
-          />
-          <button
-            onClick={handleSendMessage}
-            className="ml-4 bg-primary text-white p-2 rounded-lg"
-            disabled={uploading}
-          >
-            {uploading ? (
-              <AiOutlineLoading className="animate-spin" />
             ) : (
-              <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
+              <div className="flex items-center justify-center h-full">
+                <h2 className="text-gray-500">{t('select-user-text')}</h2>
+              </div>
             )}
-          </button>
+          </div>
+          {/* Chat input */}
+          <div className="sticky bottom-0 p-4 bg-white shadow flex flex-col z-10">
+            <div className="p-4 bg-gray-100 shadow flex items-center sticky bottom-0">
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <FiPaperclip className="text-gray-500 mr-2" />
+              </label>
+              <input
+                type="file"
+                id="file-upload"
+                className="hidden"
+                onChange={() => {}}
+                multiple
+              />
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => dispatch(setMessage(e.target.value))}
+                placeholder={t('type-message')}
+                className="flex-1 bg-gray-200 p-2 rounded-lg outline-none"
+                onKeyDown={handleSendOnEnter}
+              />
+              <button
+                onClick={handleSendMessage}
+                className="ml-4 bg-primary text-white p-2 rounded-lg"
+                disabled={uploading}
+              >
+                {uploading ? (
+                  <AiOutlineLoading className="animate-spin" />
+                ) : (
+                  <PaperAirplaneIcon className="h-5 w-5 -rotate-45" />
+                )}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </Layout>
