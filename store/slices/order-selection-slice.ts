@@ -5,10 +5,13 @@ import {
   addDoc,
   updateDoc,
   doc,
-  deleteDoc
+  deleteDoc,
+  setDoc,
+  getDoc
 } from 'firebase/firestore';
 import { toast } from 'react-toastify';
-import { Order, SelectedServices } from 'types';
+import { SelectedServices } from 'types';
+import { sendMessage } from './chats-slice';
 
 interface OrderState {
   loading: boolean;
@@ -22,46 +25,158 @@ const initialState: OrderState = {
 
 export const createOrder = createAsyncThunk(
   'order/createOrder',
-  async ({
-    selectedUser,
-    selectedServices,
-    totalPrice
-  }: {
-    selectedUser: any;
-    selectedServices: SelectedServices[];
-    totalPrice: number;
-  }) => {
-    const finalPrice = totalPrice + 10;
+  async (
+    {
+      selectedUser,
+      selectedServices,
+      totalPrice,
+      message
+    }: {
+      selectedUser: { id: string; name: string; email: string };
+      selectedServices: SelectedServices[];
+      totalPrice: number;
+      message: string;
+    },
+    { dispatch }
+  ) => {
+    try {
+      const finalPrice = totalPrice + 10;
 
-    const orderData = {
-      customerId: selectedUser.id,
-      customerName: selectedUser.name,
-      customerEmail: selectedUser.email,
-      services: selectedServices,
-      totalPrice: finalPrice,
-      pickupTime: '',
-      deliveryTime: '',
-      createdAt: new Date()
-    };
+      const orderData = {
+        customerId: selectedUser.id,
+        customerName: selectedUser.name,
+        customerEmail: selectedUser.email,
+        services: selectedServices,
+        totalPrice: finalPrice,
+        pickupTime: {
+          date: '',
+          time: ''
+        },
+        deliveryTime: {
+          date: '',
+          time: ''
+        },
+        status: 'pending_customer_input',
+        createdAt: new Date().toString(),
+        paymentEnabled: false
+      };
 
-    await addDoc(collection(db, 'orders'), orderData);
+      const orderRef = await addDoc(collection(db, 'orders'), orderData);
+      const orderId = orderRef.id;
 
-    toast.success('Order saved to the database successfully!');
-    return orderData;
+      const chatDocRef = doc(db, 'chats', selectedUser.id);
+      const chatDoc = await getDoc(chatDocRef);
+
+      if (!chatDoc.exists()) {
+        await setDoc(chatDocRef, {
+          messages: [],
+          lastMessage: message,
+          lastMessageTime: new Date().toString(),
+          type: 'options',
+          orderId
+        });
+      }
+
+      await dispatch(
+        sendMessage({
+          selectedUserId: selectedUser.id,
+          message,
+          images: [],
+          sender: 'Admin',
+          type: 'options',
+          orderId
+        })
+      );
+
+      toast.success('Order automated message sent to user!');
+
+      return { ...orderData, id: orderId };
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to create order'
+      );
+      throw error;
+    }
   }
 );
 
 export const updateOrder = createAsyncThunk(
   'order/updateOrder',
-  async ({ orderId, orderData }: { orderId: string; orderData: Order }) => {
-    const updatedOrderData = {
-      ...orderData
-    };
+  async (
+    {
+      id,
+      selectedServices,
+      totalPrice,
+      message,
+      userId
+    }: {
+      id: string;
+      selectedServices: SelectedServices[];
+      totalPrice: number;
+      message?: string;
+      userId?: string;
+    },
+    { dispatch }
+  ) => {
+    try {
+      const finalPrice = totalPrice + 10;
 
+      const orderData = {
+        services: selectedServices,
+        totalPrice: finalPrice,
+        status: 'pending_customer_input'
+      };
+
+      const orderRef = doc(db, 'orders', id);
+      await updateDoc(orderRef, orderData);
+
+      if (message) {
+        const chatDocRef = doc(db, 'chats', id);
+        const chatDoc = await getDoc(chatDocRef);
+
+        if (!chatDoc.exists()) {
+          await setDoc(chatDocRef, {
+            messages: [],
+            lastMessage: message,
+            lastMessageTime: new Date().toString(),
+            type: 'yesno',
+            orderId: id
+          });
+        } else {
+          await updateDoc(chatDocRef, {
+            lastMessage: message,
+            lastMessageTime: new Date().toString()
+          });
+        }
+
+        await dispatch(
+          sendMessage({
+            selectedUserId: userId,
+            message,
+            images: [],
+            sender: 'Admin',
+            type: 'yesno',
+            orderId: id
+          })
+        );
+      }
+
+      return { ...orderData, id };
+    } catch (error) {
+      throw error;
+    }
+  }
+);
+
+export const fetchOrderById = createAsyncThunk(
+  'order/fetchOrderById',
+  async (orderId: string) => {
     const orderRef = doc(db, 'orders', orderId);
-    await updateDoc(orderRef, updatedOrderData);
+    const orderDoc = await getDoc(orderRef);
 
-    toast.success('Order updated successfully!');
+    if (orderDoc.exists()) {
+      return orderDoc.data();
+    }
   }
 );
 
@@ -70,22 +185,47 @@ export const deleteOrder = createAsyncThunk(
   async (orderId: string) => {
     const orderRef = doc(db, 'orders', orderId);
     await deleteDoc(orderRef);
-
-    toast.success('Order deleted successfully!');
   }
 );
 
 export const updatePaymentStatus = createAsyncThunk(
   'order/updatePaymentStatus',
-  async ({ orderId, status }: { orderId: string; status: string }) => {
+  async ({
+    orderId,
+    status,
+    paymentEnabled
+  }: {
+    orderId: string;
+    status?: string;
+    paymentEnabled?: boolean;
+  }) => {
     const orderRef = doc(db, 'orders', orderId);
     await updateDoc(orderRef, {
-      paymentStatus: status
+      paymentStatus: status,
+      paymentEnabled
     });
 
     toast.success('Payment status updated successfully!');
   }
 );
+
+export const updateOrderDetails = async (
+  orderId: string,
+  pickupTime: string,
+  deliveryTime: string
+) => {
+  const orderDocRef = doc(db, 'orders', orderId);
+
+  try {
+    await updateDoc(orderDocRef, {
+      pickupTime,
+      deliveryTime,
+      status: 'confirmed'
+    });
+  } catch (error) {
+    console.error('Error updating order details:', error);
+  }
+};
 
 const orderSlice = createSlice({
   name: 'order',
@@ -146,7 +286,19 @@ const orderSlice = createSlice({
           state.error = action.payload || 'Failed to update payment status';
           toast.error('Failed to update payment status. Please try again.');
         }
-      );
+      )
+      .addCase(fetchOrderById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchOrderById.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(fetchOrderById.rejected, (state, action: PayloadAction<any>) => {
+        state.loading = false;
+        state.error = action.payload || 'Failed to fetch order';
+        toast.error('Failed to fetch the order. Please try again.');
+      });
   }
 });
 

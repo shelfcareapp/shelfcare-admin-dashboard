@@ -1,7 +1,7 @@
-import { SelectedServices } from 'types';
+import {SelectedServices} from 'types';
 
 export const calculateTotalPrice = (
-  selectedServices: SelectedServices,
+  selectedServices: SelectedServices[],
   discount: number
 ) => {
   const totalPrice = Object.values(selectedServices).reduce(
@@ -10,8 +10,7 @@ export const calculateTotalPrice = (
   );
 
   discount = discount || 0;
-  const discountAmount = totalPrice * (discount / 100);
-  const finalPrice = totalPrice - discountAmount + 10;
-
-  return finalPrice;
+  const discountAmount = Number(totalPrice) * (discount / 100);
+  return Number(totalPrice) - discountAmount + 10;
 };
+

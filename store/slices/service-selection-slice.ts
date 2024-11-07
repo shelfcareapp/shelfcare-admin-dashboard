@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { RootState } from '../store';
 import { SelectedServices } from 'types';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -18,14 +19,26 @@ const serviceSelectionSlice = createSlice({
   reducers: {
     setSelectedServices: (state, action: PayloadAction<SelectedServices[]>) => {
       state.selectedServices = action.payload;
-      state.totalPrice = state.selectedServices.reduce(
-        (total, service) =>
-          total +
-          service.price *
-            service.quantity *
-            (1 - (service.discount || 0) / 100),
-        0
-      );
+      const calculateTotalPrice = (service: SelectedServices): number => {
+        const subOptionsTotal =
+          service.subOptions?.reduce(
+            (total, subOption) => total + subOption.price,
+            0
+          ) || 0;
+        const servicePrice = service.price * service.quantity;
+        const totalPrice = servicePrice + subOptionsTotal;
+        const discount = service.discount || 0;
+        return totalPrice - discount;
+      };
+      const calculateTotalServicesPrice = (
+        services: SelectedServices[]
+      ): number => {
+        return services.reduce(
+          (total, service) => total + calculateTotalPrice(service),
+          0
+        );
+      };
+      state.totalPrice = calculateTotalServicesPrice(state.selectedServices);
     },
     addSelectedService: (
       state,
@@ -33,13 +46,10 @@ const serviceSelectionSlice = createSlice({
     ) => {
       const newService = {
         ...action.payload,
-        id: uuidv4() // Generate unique ID
+        id: uuidv4()
       };
       state.selectedServices.push(newService);
-      state.totalPrice +=
-        newService.price *
-        newService.quantity *
-        (1 - (newService.discount || 0) / 100);
+      state.totalPrice += newService.price;
     },
     removeSelectedService: (state, action: PayloadAction<string>) => {
       state.selectedServices = state.selectedServices.filter(
@@ -84,9 +94,9 @@ export const {
   setSelectedServices
 } = serviceSelectionSlice.actions;
 
-export const selectSelectedServices = (state: any) =>
+export const selectSelectedServices = (state: RootState) =>
   state.serviceSelection.selectedServices;
-export const selectTotalPrice = (state: any) =>
+export const selectTotalPrice = (state: RootState) =>
   state.serviceSelection.totalPrice;
 
 export default serviceSelectionSlice.reducer;
