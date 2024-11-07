@@ -127,7 +127,7 @@ const Component = () => {
 
 export default function Profile() {
   return (
-    <Layout title="Profile">
+    <Layout>
       <Component />
     </Layout>
   );

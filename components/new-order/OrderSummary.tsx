@@ -1,96 +1,29 @@
 'use client';
 
-import { useAppDispatch } from 'hooks/use-store';
 import { useTranslations } from 'next-intl';
 import React from 'react';
-import { toast } from 'react-toastify';
-import { sendMessage } from 'store/slices/chats-slice';
-import { SelectedServices } from 'types';
+import { Customer, SelectedServices } from 'types';
+import { DELIVERY_FEE } from '../../constants';
 
 interface OrderSummaryProps {
-  selectedServices: SelectedServices;
+  selectedServices: SelectedServices[];
   totalPrice: number;
-  customer: {
-    id: string;
-    name: string;
-    email: string;
-    address: string;
-    entranceInfo: string;
-    phone: string;
-    postalCode: string;
-  };
-  onConfirmOrder: () => void;
-  onBackClick: () => void;
+  customer: Pick<Customer, 'id'>;
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({
   selectedServices,
   totalPrice,
-  customer,
-  onBackClick,
-  onConfirmOrder
+  customer
 }) => {
-  const dispatch = useAppDispatch();
-  const deliveryFee = 10;
   const t = useTranslations('order-review');
-  const tNewOrder = useTranslations('new-order');
 
   const calculateTotalPayable = () => {
-    const subtotal = totalPrice;
-    const totalPayable = subtotal + deliveryFee;
+    const totalPayable = totalPrice + DELIVERY_FEE;
     return Math.round(totalPayable * 100) / 100;
   };
 
   const selectedServicesArray = Object.keys(selectedServices);
-
-  // Generate the receipt message
-  const generateReceiptMessage = () => {
-    let message = `Order Summary for ${customer.name}:\n\n`;
-    message += `Customer Info:\nName: ${customer.name}\nEmail: ${customer.email}\nPhone: ${customer.phone}\nAddress: ${customer.address}\n\n`;
-    message += `Services:\n`;
-
-    selectedServicesArray.forEach((serviceKey) => {
-      const service = selectedServices[serviceKey];
-      message += `\n- ${service.name} x ${service.quantity}, ${(
-        service.price * service.quantity
-      ).toFixed(2)} €`;
-      if (service.additionalInfo) {
-        message += `\n  Info: ${service.additionalInfo}`;
-      }
-      if (service.subOptions && service.subOptions.length > 0) {
-        message += `\n  SubOptions: ${service.subOptions
-          .map((subOption) => `${subOption.name} (${subOption.price} €)`)
-          .join(', ')}`;
-      }
-    });
-
-    message += `\n\nSubtotal: ${totalPrice.toFixed(2)} €`;
-    message += `\nDelivery Fee: ${deliveryFee.toFixed(2)} €`;
-    message += `\nTotal Payable: ${calculateTotalPayable()} €`;
-
-    message += `\n\nPlease confirm your pickup and return time.`;
-    return message;
-  };
-
-  console.log('customer', customer);
-  const handleSendMessage = () => {
-    const message = generateReceiptMessage();
-    if (!message.trim()) return;
-    const images = [];
-    const sender = 'admin-order-confirmation';
-    dispatch(
-      sendMessage({
-        selectedUserId: customer.id,
-        message,
-        images,
-        sender
-      })
-    );
-
-    onConfirmOrder();
-
-    toast.success('Order sent successfully!');
-  };
 
   return (
     <>
@@ -131,7 +64,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                             {selectedServices[serviceKey].subOptions.map(
                               (subOption) => (
                                 <li key={subOption.key}>
-                                  {subOption.name} - {subOption.price} €
+                                  {subOption.key} - {subOption.price} €
                                 </li>
                               )
                             )}
@@ -142,11 +75,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                       {selectedServices[serviceKey].quantity}
                     </td>
                     <td className="text-right py-4">
-                      {(
-                        selectedServices[serviceKey].price *
-                        selectedServices[serviceKey].quantity
-                      ).toFixed(2)}{' '}
-                      €
+                      {selectedServices[serviceKey].price.toFixed(2)} €
                     </td>
                   </tr>
                 ))
@@ -166,7 +95,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
           </div>
           <div className="flex justify-between text-sm text-gray-500">
             <p>{t('delivery-service-fees')}</p>
-            <p>{deliveryFee.toFixed(2)} €</p>
+            <p>{DELIVERY_FEE.toFixed(2)} €</p>
           </div>
 
           <div className="flex justify-between text-lg font-semibold mt-4">
@@ -174,20 +103,6 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             <p>{calculateTotalPayable()} €</p>
           </div>
         </div>
-      </div>
-      <div className="flex items-center justify-between mt-5">
-        <button
-          className="bg-gray-200 text-gray-900 px-4 py-2 rounded mb-2 hover:bg-gray-300"
-          onClick={onBackClick}
-        >
-          {tNewOrder('back')}
-        </button>
-        <button
-          className="bg-primary text-white px-4 py-2 rounded"
-          onClick={handleSendMessage}
-        >
-          Send Order
-        </button>
       </div>
     </>
   );

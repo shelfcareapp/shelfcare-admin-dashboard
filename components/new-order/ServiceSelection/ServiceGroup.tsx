@@ -16,43 +16,53 @@ const ServiceGroup = ({
   const dispatch = useAppDispatch();
 
   const [tempSelectedServices, setTempSelectedServices] = useState({});
-  const [selectedSubOption, setSelectedSubOption] = useState('');
 
   const handleServiceToggle = (serviceKey, serviceName, servicePrice) => {
-    const currentService = tempSelectedServices[serviceKey];
-
-    if (currentService) {
-      const updatedServices = { ...tempSelectedServices };
-      delete updatedServices[serviceKey];
-      setTempSelectedServices(updatedServices);
-    } else {
-      setTempSelectedServices({
-        ...tempSelectedServices,
-        [serviceKey]: {
+    setTempSelectedServices((prev) => {
+      const updatedServices = { ...prev };
+      if (updatedServices[serviceKey]) {
+        delete updatedServices[serviceKey];
+      } else {
+        updatedServices[serviceKey] = {
           parent: namespace,
           name: serviceName,
           price: servicePrice,
           quantity: 1,
           subOptions: []
-        }
-      });
-    }
+        };
+      }
+      return updatedServices;
+    });
   };
 
-  const handleSubOptionChange = (e) => {
-    const selectedSubOption = e.target.value;
-    setSelectedSubOption(selectedSubOption);
+  const handleSubOptionChange = (e, serviceKey, subOptionKey, price) => {
+    const isChecked = e.target.checked;
+
+    setTempSelectedServices((prev) => {
+      const currentService = prev[serviceKey] || {};
+      const currentSubOptions = currentService.subOptions || [];
+
+      const updatedSubOptions = isChecked
+        ? [...currentSubOptions, { key: subOptionKey, price }]
+        : currentSubOptions.filter((option) => option.key !== subOptionKey);
+
+      return {
+        ...prev,
+        [serviceKey]: {
+          ...currentService,
+          subOptions: updatedSubOptions
+        }
+      };
+    });
   };
 
   const handleAddToServices = () => {
     Object.keys(tempSelectedServices).forEach((serviceKey) => {
-      const subOptions = tempSelectedServices[serviceKey];
-      const subOptionsPrice = subOptions.subOptions.reduce(
-        (acc, subOption) => Number(acc) + Number(subOption.price),
+      const service = tempSelectedServices[serviceKey];
+      const subOptionsPrice = service.subOptions.reduce(
+        (acc, option) => acc + Number(option.price),
         0
       );
-
-      const service = tempSelectedServices[serviceKey];
 
       const discountedPrice =
         (Number(service.price) + subOptionsPrice) *
@@ -65,7 +75,7 @@ const ServiceGroup = ({
           name: service.name,
           price: totalPrice,
           quantity: service.quantity,
-          subOptions: service.subOptions || [],
+          subOptions: service.subOptions,
           discount: service.discount || 0,
           additionalInfo: service.additionalInfo || ''
         })
@@ -144,13 +154,13 @@ const ServiceGroup = ({
                         min="1"
                         value={tempSelectedServices[serviceKey]?.quantity || 1}
                         onChange={(e) =>
-                          setTempSelectedServices({
-                            ...tempSelectedServices,
+                          setTempSelectedServices((prev) => ({
+                            ...prev,
                             [serviceKey]: {
-                              ...tempSelectedServices[serviceKey],
+                              ...prev[serviceKey],
                               quantity: parseInt(e.target.value)
                             }
-                          })
+                          }))
                         }
                         className="p-1 w-16 border border-gray-300 rounded"
                       />
@@ -159,53 +169,76 @@ const ServiceGroup = ({
                       <span className="text-primary mr-4">{t('discount')}</span>
                       <input
                         type="number"
-                        min="1"
+                        min="0"
                         value={tempSelectedServices[serviceKey]?.discount || 0}
                         onChange={(e) =>
-                          setTempSelectedServices({
-                            ...tempSelectedServices,
+                          setTempSelectedServices((prev) => ({
+                            ...prev,
                             [serviceKey]: {
-                              ...tempSelectedServices[serviceKey],
+                              ...prev[serviceKey],
                               discount: parseInt(e.target.value)
                             }
-                          })
+                          }))
                         }
                         className="p-1 w-16 border border-gray-300 rounded"
                       />
                     </div>
-                    {subOptionsKeys[serviceKey] && (
-                      <select
-                        className="p-2 border border-gray-300 rounded mt-2"
-                        onChange={handleSubOptionChange}
-                        value={selectedSubOption}
-                      >
-                        <option value="" disabled>
-                          {t('select-sub-options')}
-                        </option>
-                        {subOptionsKeys[serviceKey].map((subOptionKey) => {
-                          const name = t(
-                            `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.name`
-                          );
-                          const price = Number(
-                            t(
-                              `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.price`
-                            )
-                          );
-                          const value = `${name} - ${price} €`;
-                          return (
-                            <option key={subOptionKey} value={value}>
-                              {t(
-                                `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.name`
-                              )}{' '}
-                              -{' '}
-                              {t(
-                                `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.price`
-                              )}{' '}
-                            </option>
-                          );
-                        })}
-                      </select>
-                    )}
+                    {subOptionsKeys[serviceKey] &&
+                      subOptionsKeys[serviceKey].map((subOptionKey) => {
+                        const name = t(
+                          `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.name`
+                        );
+                        const price = Number(
+                          t(
+                            `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.price`
+                          )
+                        );
+
+                        return (
+                          <label
+                            key={subOptionKey}
+                            className="flex items-center mb-2"
+                          >
+                            <input
+                              type="checkbox"
+                              className="mr-2"
+                              checked={tempSelectedServices[
+                                serviceKey
+                              ]?.subOptions.some(
+                                (option) => option.key === subOptionKey
+                              )}
+                              onChange={(e) =>
+                                handleSubOptionChange(
+                                  e,
+                                  serviceKey,
+                                  subOptionKey,
+                                  price
+                                )
+                              }
+                            />
+                            <span>
+                              {name} - +{price} €
+                            </span>
+                          </label>
+                        );
+                      })}
+
+                    <textarea
+                      placeholder={t('additional-info')}
+                      className="border border-gray-300 rounded p-2"
+                      value={
+                        tempSelectedServices[serviceKey]?.additionalInfo || ''
+                      }
+                      onChange={(e) =>
+                        setTempSelectedServices((prev) => ({
+                          ...prev,
+                          [serviceKey]: {
+                            ...prev[serviceKey],
+                            additionalInfo: e.target.value
+                          }
+                        }))
+                      }
+                    />
 
                     <button
                       className="bg-primary text-white px-4 py-2 rounded mt-4"

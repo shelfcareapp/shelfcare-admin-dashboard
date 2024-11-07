@@ -1,6 +1,7 @@
 'use client';
+import React from 'react';
 
-import { auth } from '../firebase';
+import { auth, db } from '../firebase';
 import {
   Disclosure,
   DisclosureButton,
@@ -17,13 +18,17 @@ import { useEffect, useRef, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 import { toast } from 'react-toastify';
 import { useAppDispatch, useAppSelector } from 'hooks/use-store';
-import { fetchChats, setSelectedChatId } from 'store/slices/chats-slice';
+import {
+  listenToAllChats,
+  setSelectedChatId,
+  setHasNewNotification
+} from 'store/slices/chats-slice';
 import LanguageSwitcher from './LanguageSwitcher';
 import { useTranslations } from 'next-intl';
 import { useOutsideClick } from 'hooks/use-outside-click';
+import { doc, updateDoc } from 'firebase/firestore';
 
 export interface LayoutProps {
-  title: string;
   children: React.ReactNode;
 }
 
@@ -31,7 +36,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
 }
 
-function LayoutComponent({ title, children }: LayoutProps) {
+function LayoutComponent({ children }: LayoutProps) {
   const [user, loading] = useAuthState(auth);
   const { chats } = useAppSelector((state) => state.chats);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -52,12 +57,12 @@ function LayoutComponent({ title, children }: LayoutProps) {
   }, [user, loading, router]);
 
   useEffect(() => {
-    dispatch(fetchChats());
+    dispatch(listenToAllChats());
   }, [dispatch]);
 
-  const unreadChats = chats.filter((chat) =>
-    chat.messages.some((msg) => !msg.isRead)
-  );
+  const unreadChats = Array.isArray(chats)
+    ? chats.filter((chat) => chat.messages.some((msg) => !msg.isRead))
+    : [];
 
   const handleNotificationClick = () => {
     setNotificationOpen(!notificationOpen);
@@ -67,14 +72,33 @@ function LayoutComponent({ title, children }: LayoutProps) {
     if (isUpdating) return;
 
     setIsUpdating(true);
-    dispatch(setSelectedChatId(chatId));
-
-    const chat = unreadChats.find((chat) => chat.id === chatId);
-    if (!chat) return;
 
     try {
+      const chat = unreadChats.find((chat) => chat.id === chatId);
+      if (!chat) {
+        return;
+      }
+
+      dispatch(setSelectedChatId(chatId));
+
+      const chatDocRef = doc(db, 'chats', chatId);
+      const updatedMessages = chat.messages.map((msg) => ({
+        ...msg,
+        isRead: true
+      }));
+
+      await Promise.all([
+        updateDoc(chatDocRef, {
+          messages: updatedMessages,
+          lastReadAt: new Date().toISOString()
+        }),
+
+        router.push(`/chats`)
+      ]);
+
+      localStorage.setItem('not', 'false');
+      dispatch(setHasNewNotification(false));
       setNotificationOpen(false);
-      router.push(`/chats`);
     } catch (error) {
       console.error('Error updating messages:', error);
       toast.error('Failed to mark messages as read');
@@ -96,36 +120,36 @@ function LayoutComponent({ title, children }: LayoutProps) {
   return (
     <div className="min-h-full flex flex-col">
       <Disclosure as="nav" className="bg-primary">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <h1 className="text-2xl font-bold text-secondary">Shelfcare</h1>
               </div>
-              <div className="hidden md:block">
-                <div className="ml-10 flex items-baseline space-x-4">
-                  <a
-                    href="/"
-                    className={classNames(
-                      'bg-primary text-secondary',
-                      'rounded-md px-3 py-2 font-medium'
-                    )}
-                  >
-                    {t('messages')}
-                  </a>
-                  <a
+            </div>
+            <div className="hidden md:block">
+              <div className="ml-10 flex items-baseline space-x-4">
+                <a
+                  href="/chats"
+                  className={classNames(
+                    'bg-primary text-secondary',
+                    'rounded-md px-3 py-2 font-medium'
+                  )}
+                >
+                  {t('chats')}
+                </a>
+                {/* <a
                     href="/new-order"
                     className="text-secondary hover:bg-[#A52A2A] hover:text-white rounded-md px-3 py-2 font-medium"
                   >
                     {t('new-order')}
-                  </a>
-                  <a
-                    href="/orders"
-                    className="text-secondary hover:bg-[#A52A2A] hover:text-white rounded-md px-3 py-2 font-medium"
-                  >
-                    {t('orders')}
-                  </a>
-                </div>
+                  </a> */}
+                <a
+                  href="/orders"
+                  className="text-secondary hover:bg-[#A52A2A] hover:text-white rounded-md px-3 py-2 font-medium"
+                >
+                  {t('orders')}
+                </a>
               </div>
             </div>
             <div className="hidden md:block">
@@ -286,22 +310,13 @@ function LayoutComponent({ title, children }: LayoutProps) {
         </DisclosurePanel>
       </Disclosure>
 
-      <header className="bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          <h1 className="text-xl font-semibold leading-6 text-primary">
-            {title}
-          </h1>
-        </div>
-      </header>
-      <main className="bg-gray-100">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex-grow">
-          {children}
-        </div>
+      <main>
+        <div className="max-w-full px-24 py-8 flex-grow mt-4">{children}</div>
       </main>
     </div>
   );
 }
 
-export default function Layout({ title, children }: LayoutProps) {
-  return <LayoutComponent title={title}>{children}</LayoutComponent>;
+export default function Layout({ children }: LayoutProps) {
+  return <LayoutComponent>{children}</LayoutComponent>;
 }

@@ -23,9 +23,6 @@ import ServiceList from './ServiceList';
 const ServiceSelection = () => {
   const t = useTranslations('pricing');
 
-  const selectedServices = useAppSelector(
-    (state) => state.serviceSelection.selectedServices
-  );
   const totalPrice = useAppSelector(
     (state) => state.serviceSelection.totalPrice
   );
@@ -114,7 +111,7 @@ const ServiceSelection = () => {
           />
         </div>
 
-        <ServiceList selectedServices={selectedServices} />
+        <ServiceList />
       </div>
     </div>
   );

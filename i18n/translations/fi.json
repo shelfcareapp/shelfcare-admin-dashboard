@@ -1,6 +1,6 @@
 {
   "header": {
-    "messages": "Viestit",
+    "chats": "Keskustelut",
     "orders": "Tilaukset",
     "new-order": "Uusi tilaus",
     "profile": "Profiili",
@@ -20,8 +20,12 @@
   "new-order": {
     "title": "Uusi tilaus",
     "back": "Takaisin",
+    "next": "Seuraava",
     "select-service": "Valitse palvelu",
-    "next-review": "Seuraava: Tarkista tilaus"
+    "next-review": "Seuraava: Tarkista tilaus",
+    "select-user": "Valitse käyttäjä",
+    "review-order": "Tarkista tilaus",
+    "confirm-order": "Vahvista tilaus"
   },
   "user-selection": {
     "title": "Valitse käyttäjä",
@@ -53,7 +57,10 @@
     "quantity": "Määrä",
     "discount": "Alennus (%)",
     "additional-info": "Lisätiedot",
+    "service-name": "Palvelun nimi",
+    "sub-options": "Alavaihtoehdot",
     "custom-service": "Räätälöity palvelu",
+    "remove": "Poista",
     "select-sub-options": "Valitse alavaihtoehdot",
     "add-service": "Lisää palvelu",
     "price": "Hinta",
@@ -563,26 +570,128 @@
         "boots": {
           "title": "Saappaat",
           "services": {
-            "heel_replacement": {
-              "name": "Korkolapun vaihto",
+            "heel_replacement_small": {
+              "name": "Korkolapun vaihto, Ø alle 1cm",
               "price": "28",
+              "subOptions": {}
+            },
+            "heel_replacement_medium": {
+              "name": "Korkolapun vaihto, Ø alle 5cm",
+              "price": "34",
+              "subOptions": {}
+            },
+            "heel_replacement_large": {
+              "name": "Korkolapun vaihto, Ø yli 5cm",
+              "price": "39",
+              "subOptions": {}
+            },
+            "heel_replacement_thick": {
+              "name": "Paksun korkolapun vaihto",
+              "price": "45",
+              "subOptions": {}
+            },
+            "heel_relining": {
+              "name": "Korkojen päällystys + uudet korkolaput",
+              "price": "86",
+              "subOptions": {}
+            },
+            "heel_attachment": {
+              "name": "Koron kiinnitys per kpl",
+              "price": "32",
               "subOptions": {}
             },
             "sole_replacement": {
               "name": "Puolipohjan vaihto",
               "price": "44",
               "subOptions": {
-                "vibram_sole": { "name": "Vibram Sole", "price": "+10" }
+                "leather_sole": {
+                  "name": "Nahkainen puolipohja",
+                  "price": "+8"
+                },
+                "louboutin_sole": {
+                  "name": "Louboutin/Maison Margiela",
+                  "price": "+25"
+                }
               }
             },
-            "shoe_shine": {
-              "name": "Kenkien puhdistus ja hoito",
-              "price": "15",
+            "sole_replacement_boots": {
+              "name": "Puolipohjan vaihto bootsit",
+              "price": "46",
               "subOptions": {}
             },
-            "leather_conditioning": {
+            "toe_piece_replacement": {
+              "name": "Kärkipalojen vaihto",
+              "price": "29",
+              "subOptions": {}
+            },
+            "tennis_shoe_resole": {
+              "name": "Tennareiden uudelleenpohjaus",
+              "price": "109",
+              "subOptions": {}
+            },
+            "converse_resole": {
+              "name": "Converse-kenkien uudelleenpohjaus",
+              "price": "138",
+              "subOptions": {}
+            },
+            "dr_martens_resole": {
+              "name": "Dr. Martens pohjan vaihto",
+              "price": "109",
+              "subOptions": {}
+            },
+            "single_shoe_glue": {
+              "name": "Yhden kengän pohjan liimaus",
+              "price": "23",
+              "subOptions": {}
+            },
+            "pair_shoe_glue": {
+              "name": "Kenkäparin pohjien liimaus",
+              "price": "40",
+              "subOptions": {}
+            },
+            "inner_lining_repair": {
+              "name": "Pohjavuorin korjaus",
+              "price": "29",
+              "subOptions": {}
+            },
+            "side_patch": {
+              "name": "Sivupaikka",
+              "price": "37",
+              "subOptions": {}
+            },
+            "upper_patch": {
+              "name": "Päällisen paikka",
+              "price": "23",
+              "subOptions": {}
+            },
+            "zipper_replacement_short_boots": {
+              "name": "Nilkkureiden vetoketjun vaihto",
+              "price": "58",
+              "subOptions": {}
+            },
+            "zipper_replacement_tall_boots": {
+              "name": "Saappaiden vetoketjun vaihto",
+              "price": "75",
+              "subOptions": {}
+            },
+            "shoe_cleaning": {
+              "name": "Kenkien puhdistus ja hoito",
+              "price": "25",
+              "subOptions": {}
+            },
+            "sneaker_cleaning": {
+              "name": "Tennareiden pesu ja hoito",
+              "price": "75",
+              "subOptions": {}
+            },
+            "deep_leather_shoe_cleaning": {
               "name": "Nahkakenkien syväpesu ja hoito",
-              "price": "20",
+              "price": "65",
+              "subOptions": {}
+            },
+            "premium_leather_shoe_cleaning": {
+              "name": "Nahkakenkien syväpesu ja juhlahoito",
+              "price": "75",
               "subOptions": {}
             }
           }
@@ -600,6 +709,11 @@
               "price": "75",
               "subOptions": {}
             },
+            "shortening_sleeves_with_zipper": {
+              "name": "Hihojen lyhennys ja vetoketjun siirto",
+              "price": "95",
+              "subOptions": {}
+            },
             "narrowing_leather_jacket": {
               "name": "Nahkatakin kavennus",
               "price": "95",
@@ -612,15 +726,32 @@
                 "metal_zipper": {
                   "name": "Metallinen vetoketju",
                   "price": "+8"
+                },
+                "long_zipper": {
+                  "name": "Pituus yli polven",
+                  "price": "+45"
                 }
               }
+            },
+            "motorcycle_jacket_zipper_replacement": {
+              "name": "Moottoripyörätakin vetoketjun vaihto",
+              "price": "149",
+              "subOptions": {}
             },
             "changing_lining": {
               "name": "Vuorin vaihtaminen",
               "price": "259",
               "subOptions": {
-                "lining_silk": { "name": "Silk Lining", "price": "+30" }
+                "lining_long": {
+                  "name": "Pituus yli polven",
+                  "price": "+70"
+                }
               }
+            },
+            "deep_cleaning": {
+              "name": "Nahkatakin syväpesu",
+              "price": "92",
+              "subOptions": {}
             }
           }
         },
@@ -656,6 +787,91 @@
                   "price": "+8"
                 }
               }
+            }
+          }
+        },
+        "bags": {
+          "title": "Laukut",
+          "services": {
+            "zipper_replacement_short": {
+              "name": "Vetoketjun vaihto, vetoketju alle 30cm",
+              "price": "50",
+              "subOptions": {
+                "leather_bag": {
+                  "name": "Nahkalaukku",
+                  "price": "+15"
+                }
+              }
+            },
+            "zipper_replacement_long": {
+              "name": "Vetoketjun vaihto, vetoketju yli 30cm",
+              "price": "79",
+              "subOptions": {
+                "leather_bag": {
+                  "name": "Nahkalaukku",
+                  "price": "+25"
+                }
+              }
+            },
+            "inner_zipper_replacement": {
+              "name": "Sisävetoketjun vaihto vuorilliseen laukkuun",
+              "price": "29",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "backpack_zipper_replacement": {
+              "name": "Repun vetoketjun vaihto",
+              "price": "59",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metallinen vetoketju",
+                  "price": "+8"
+                }
+              }
+            },
+            "leather_strap_repair": {
+              "name": "Nahkahihnan tikkauskorjaus",
+              "price": "15",
+              "subOptions": {}
+            },
+            "leather_strap_patch": {
+              "name": "Nahkahihnan korjaus paikalla",
+              "price": "26",
+              "subOptions": {}
+            }
+          }
+        },
+        "other_cobbler_services": {
+          "title": "Muut suutaripalvelut",
+          "services": {
+            "button_sewing": {
+              "name": "Napin ompelu nahkatavaraan",
+              "price": "9",
+              "subOptions": {}
+            },
+            "tear_repair_small": {
+              "name": "Repeämän korjaus, repeämä alle 5cm",
+              "price": "25",
+              "subOptions": {}
+            },
+            "tear_repair_large": {
+              "name": "Repeämän korjaus, repeämä yli 5cm",
+              "price": "35",
+              "subOptions": {}
+            },
+            "stitching_repair": {
+              "name": "Tikkaukset, esim. revennyt sauma",
+              "price": "22",
+              "subOptions": {}
+            },
+            "stain_removal_small": {
+              "name": "Tahran puhdistus, alle 20cm",
+              "price": "25",
+              "subOptions": {}
             }
           }
         }
@@ -766,6 +982,8 @@
     "continue": "Jatka",
     "orderSuccess": "Tilaus on lähetetty onnistuneesti!",
     "error": "Tapahtui virhe. Yritä uudelleen myöhemmin.",
-    "emailSuccess": "Sähköposti lähetetty onnistuneesti!"
+    "emailSuccess": "Sähköposti lähetetty onnistuneesti!",
+    "messages": "Viestit",
+    "edit": "Muokkaa"
   }
 }

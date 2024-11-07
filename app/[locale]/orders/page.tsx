@@ -4,9 +4,6 @@ import { useEffect, useState } from 'react';
 import Layout from 'components/Layout';
 import { toast } from 'react-toastify';
 import Loading from 'components/Loading';
-import Breadcrumbs from 'components/Breadcrumbs';
-import Modal from 'components/Modal';
-import ServiceSelection from 'components/new-order/ServiceSelection';
 import { useAppDispatch, useAppSelector } from 'hooks/use-store';
 import {
   fetchOrders,
@@ -14,94 +11,43 @@ import {
   selectLoading
 } from 'store/slices/orders-slice';
 import {
-  deleteOrder,
-  // updateOrder,
-  updatePaymentStatus
+  deleteOrder
+  // updatePaymentStatus
 } from 'store/slices/order-selection-slice';
-import {
-  // setSelectedServices,
-  selectSelectedServices
-} from 'store/slices/service-selection-slice';
-import { Order, SelectedServices } from 'types';
-import { calculateTotalPrice } from 'utils/calculate-total-price';
+import { Order } from 'types';
+import { FiSearch } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+
+const filterOptions = [
+  { value: 'pickup-time', label: 'Pickup Time' },
+  { value: 'delivery-time', label: 'Delivery Time' }
+  // { value: 'payment-status', label: 'Payment Status' }
+];
+
+// const paymentStatusOptions = {
+//   Paid: 'Paid',
+//   Pending: 'Pending'
+// };
 
 export default function OrdersPage() {
   const dispatch = useAppDispatch();
   const orders = useAppSelector(selectOrders);
-  const selectedServices = useAppSelector(selectSelectedServices);
+  const router = useRouter();
   const loading = useAppSelector(selectLoading);
 
-  const [editOrderId, setEditOrderId] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [ordersPerPage] = useState<number>(5);
-  const [showModalForOrderId, setShowModalForOrderId] = useState<string | null>(
-    null
-  );
-  const [currentOrderServices, setCurrentOrderServices] =
-    useState<SelectedServices>();
-  const [pickupTime, setPickupTime] = useState<string | null>(null);
-  const [deliveryTime, setDeliveryTime] = useState<string | null>(null);
+
   const [reloadOrders, setReloadOrders] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedFilter, setSelectedFilter] = useState('');
+  // const [paymentEnabled, setPaymentEnabled] = useState(false);
+  const t = useTranslations('common');
 
   useEffect(() => {
     dispatch(fetchOrders());
-  }, [dispatch, reloadOrders]);
-
-  useEffect(() => {
-    if (editOrderId) {
-      const order = orders.find((o) => o.id === editOrderId);
-      if (order) {
-        setPickupTime(order.pickupTime || '');
-        setDeliveryTime(order.deliveryTime || '');
-        setCurrentOrderServices(order.services || {});
-      }
-    }
-  }, [editOrderId, orders, reloadOrders]);
-
-  const updateServiceDetails = (
-    serviceKey: string,
-    updatedData: Partial<SelectedServices>
-  ) => {
-    setCurrentOrderServices((prevServices) => ({
-      ...prevServices,
-      [serviceKey]: {
-        ...prevServices[serviceKey],
-        ...updatedData
-      }
-    }));
-  };
-
-  const removeService = (serviceKey: string) => {
-    setCurrentOrderServices((prevServices) => {
-      const updatedServices = { ...prevServices };
-      delete updatedServices[serviceKey];
-      return updatedServices;
-    });
-  };
-
-  const toggleEditOrder = (orderId: string) => {
-    setEditOrderId(editOrderId === orderId ? null : orderId);
-  };
-
-  const saveEdits = async (orderId: string) => {
-    const order = orders.find((o) => o.id === orderId);
-    const finalPrice = calculateTotalPrice(
-      currentOrderServices,
-      order.discount || 0
-    );
-    const orderData = {
-      services: currentOrderServices,
-      pickupTime,
-      deliveryTime,
-      totalPrice: finalPrice
-    } as unknown as Partial<Order>;
-    console.log(orderData);
-
-    // await dispatch(updateOrder({ orderId, orderData }));
-    // dispatch(setSelectedServices(currentOrderServices));
-    setEditOrderId(null);
-    setReloadOrders(true);
-  };
+  }, [reloadOrders, dispatch]);
 
   const handleDeleteOrder = async (orderId: string) => {
     if (!orderId) {
@@ -110,19 +56,8 @@ export default function OrdersPage() {
     }
 
     await dispatch(deleteOrder(orderId));
+    setReloadOrders(true);
   };
-
-  const handleConfirmNewService = () => {
-    setCurrentOrderServices((prevServices) => ({
-      ...prevServices,
-      ...selectedServices
-    }));
-    setShowModalForOrderId(null);
-  };
-
-  if (loading) {
-    return <Loading />;
-  }
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
@@ -140,30 +75,70 @@ export default function OrdersPage() {
     }
   };
 
-  const setPaymentStatus = async (orderId: string, status: string) => {
-    await dispatch(updatePaymentStatus({ orderId, status }));
-    setReloadOrders(true);
+  // const setPaymentStatus = async (orderId: string, status: string) => {
+  //   await dispatch(updatePaymentStatus({ orderId, status }));
+  //   setReloadOrders(true);
+  // };
+
+  const handleFilter = (filter: string) => {
+    if (filter === selectedFilter) {
+      setSelectedFilter('');
+    } else {
+      setSelectedFilter(filter);
+    }
   };
 
-  return (
-    <Layout title="Orders">
-      <Breadcrumbs
-        paths={[{ label: 'Home', href: '/' }, { label: 'Orders' }]}
-      />
-      <div className="px-4 sm:px-6 lg:px-8 h-screen">
-        <div className="sm:flex sm:items-center">
-          <div className="sm:flex-auto">
-            <h1 className="text-base font-semibold leading-6 text-gray-900">
-              Orders
-            </h1>
-            <p className="mt-2 text-sm text-gray-700">
-              A list of all the orders including customer info, service type,
-              status, payment status, and pickup/delivery times.
-            </p>
-          </div>
-        </div>
+  const filteredOrders = currentOrders.filter((order: Order) => {
+    if (selectedFilter === 'pickup-time') {
+      return order.pickupTime && !!order.pickupTime.date;
+    }
+    if (selectedFilter === 'delivery-time') {
+      return order.deliveryTime && !!order.deliveryTime.date;
+    }
+    if (selectedFilter === 'paid') {
+      return order.paymentStatus.toLowerCase() === 'paid';
+    }
 
-        <div className="mt-8 flow-root h-full">
+    return order.customerName.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  return (
+    <Layout>
+      <div className="px-4 sm:px-6 lg:px-8 min-h-1/2">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center bg-white p-2 rounded-lg shadow w-1/3">
+            <FiSearch className="text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search orders"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="ml-2 w-full outline-none text-sm"
+            />
+          </div>
+
+          <ul tabIndex={0} className="flex items-center gap-3">
+            {filterOptions.map((option) => (
+              <li
+                key={option.value}
+                className={`p-2 bg-slate-200 rounded-md cursor-pointer text-sm hover:bg-slate-300
+                  ${selectedFilter === option.value && 'opacity-60'}
+                  `}
+                onClick={() => handleFilter(option.value)}
+              >
+                {option.label}
+              </li>
+            ))}
+          </ul>
+
+          <button
+            className="px-3 py-2 rounded-md bg-primary text-white"
+            onClick={() => router.push('/new-order')}
+          >
+            New Order
+          </button>
+        </div>
+        <div className="mt-8 flow-root h-full w-full">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <table className="min-w-full divide-y divide-gray-300 h-full">
@@ -173,7 +148,7 @@ export default function OrdersPage() {
                       Customer Info
                     </th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
-                      Service Type
+                      Order Id
                     </th>
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Total Price
@@ -184,190 +159,117 @@ export default function OrdersPage() {
                     <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Delivery Time
                     </th>
-                    <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                    {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
                       Payment Status
-                    </th>
+                    </th> */}
                     <th className="relative py-3.5 pl-3 pr-4 text-sm font-semibold text-gray-900 text-right">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {currentOrders.map((order) => (
-                    <tr key={order.id}>
-                      <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm">
-                        <div className="font-medium text-gray-900">
-                          {order.customerName}
-                        </div>
-                        <div className="text-gray-500">
-                          {order.customerEmail}
-                        </div>
-                        <div className="text-gray-500">
-                          {order.customerAddress}
-                        </div>
-                        <div className="text-gray-500">
-                          {order.customerPhone}
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                        {editOrderId === order.id ? (
-                          <ul>
-                            {Object.keys(currentOrderServices).map(
-                              (serviceKey) => (
-                                <li
-                                  key={serviceKey}
-                                  className="flex items-center space-x-2 mb-2"
-                                >
-                                  <span>
-                                    {currentOrderServices[serviceKey]?.name}:
-                                  </span>
-                                  <input
-                                    type="number"
-                                    className="w-16 p-1 border border-gray-300 rounded"
-                                    value={
-                                      currentOrderServices[serviceKey]
-                                        ?.quantity || 0
-                                    }
-                                    onChange={(e) =>
-                                      updateServiceDetails(serviceKey, {
-                                        quantity: parseInt(e.target.value, 10)
-                                      })
-                                    }
-                                    min="1"
-                                  />
-                                  <input
-                                    type="number"
-                                    placeholder="Discount"
-                                    className="w-20 p-1 ml-2 border border-gray-300 rounded"
-                                    value={
-                                      currentOrderServices[serviceKey]
-                                        ?.discount || 0
-                                    }
-                                    onChange={(e) =>
-                                      updateServiceDetails(serviceKey, {
-                                        discount: parseInt(e.target.value, 10)
-                                      })
-                                    }
-                                    min="0"
-                                  />
-                                  <input
-                                    type="text"
-                                    placeholder="Additional Info"
-                                    className="w-40 p-1 ml-2 border border-gray-300 rounded"
-                                    value={
-                                      currentOrderServices[serviceKey]
-                                        ?.additionalInfo || ''
-                                    }
-                                    onChange={(e) =>
-                                      updateServiceDetails(serviceKey, {
-                                        additionalInfo: e.target.value
-                                      })
-                                    }
-                                  />
-                                  <span>
-                                    x {currentOrderServices[serviceKey]?.price}€
-                                  </span>
-                                  <button
-                                    className="bg-red-500 text-white px-2 py-1 rounded ml-2"
-                                    onClick={() => removeService(serviceKey)}
-                                  >
-                                    Remove
-                                  </button>
-                                </li>
-                              )
-                            )}
-                            <button
-                              className="px-3 py-1 rounded-md bg-yellow-50 text-yellow-950 ml-2"
-                              onClick={() => {
-                                setShowModalForOrderId(order.id);
-                              }}
-                            >
-                              Add new service
-                            </button>
-                          </ul>
-                        ) : (
-                          <ul>
-                            {Object.keys(order.services).map((serviceKey) => (
-                              <li key={serviceKey}>
-                                {order.services[serviceKey].name}:{' '}
-                                {order.services[serviceKey].quantity} x{' '}
-                                {order.services[serviceKey].price}€
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                        {order.totalPrice} €
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                        {editOrderId === order.id ? (
-                          <input
-                            type="datetime-local"
-                            className="w-full p-2 border border-gray-300 rounded"
-                            value={pickupTime || ''}
-                            onChange={(e) => setPickupTime(e.target.value)}
-                          />
-                        ) : (
-                          order.pickupTime || 'Not set'
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                        {editOrderId === order.id ? (
-                          <input
-                            type="datetime-local"
-                            className="w-full p-2 border border-gray-300 rounded"
-                            value={deliveryTime || ''}
-                            onChange={(e) => setDeliveryTime(e.target.value)}
-                          />
-                        ) : (
-                          order.deliveryTime || 'Not set'
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                        <select
-                          className="w-24 p-2 border border-gray-300 rounded"
-                          value={order.paymentStatus}
-                          onChange={(e) =>
-                            setPaymentStatus(order.id, e.target.value)
-                          }
-                        >
-                          <option value="paid">Paid</option>
-                          <option value="pending">Pending</option>
-                        </select>
-                      </td>
-                      <td className="whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
-                        <button
-                          className={`px-3 py-1 rounded-md ${
-                            editOrderId === order.id
-                              ? 'bg-green-50 text-green-950'
-                              : 'bg-blue-50 text-blue-950'
-                          }`}
-                          onClick={() => {
-                            if (editOrderId === order.id) {
-                              saveEdits(order.id);
-                            } else {
-                              toggleEditOrder(order.id);
-                            }
-                          }}
-                        >
-                          {editOrderId === order.id ? 'Save' : 'Edit'}
-                        </button>
+                <tbody className="divide-y divide-gray-200 bg-white w-full">
+                  {loading && <Loading />}
 
-                        <button
-                          className="px-3 py-1 rounded-md bg-red-50 text-red-950 ml-2"
-                          onClick={() => handleDeleteOrder(order.id)}
-                        >
-                          Delete
-                        </button>
+                  {!loading && filteredOrders ? (
+                    filteredOrders.map((order: Order) => (
+                      <tr key={order.id}>
+                        <td className="whitespace-nowrap py-5 pl-4 pr-3 text-sm">
+                          <div className="font-medium text-gray-900">
+                            {order.customerName}
+                          </div>
+                          <div className="text-gray-500">
+                            {order.customerEmail}
+                          </div>
+                          <div className="text-gray-500">
+                            {order.customerAddress}
+                          </div>
+                          <div className="text-gray-500">
+                            {order.customerPhone}
+                          </div>
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                          {order.id}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                          {order.totalPrice} €
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                          {order.pickupTime.date.toString()} - klo{' '}
+                          {order.pickupTime.time.toString()}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
+                          {order.deliveryTime.date.toString()} - klo{' '}
+                          {order.deliveryTime.time.toString()}
+                        </td>
+                        {/* <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500 text-center">
+                          <div className="dropdown">
+                            <div
+                              tabIndex={0}
+                              role="button"
+                              className="border border-primary p-1 rounded-md"
+                            >
+                              {order?.paymentStatus || 'Not set'}
+                            </div>
+                            <ul
+                              tabIndex={0}
+                              className="dropdown-content menu bg-base-100 rounded-box z-6 w-52 shadow"
+                            >
+                              <li
+                                className="p-2 border-b border-base-200 cursor-pointer last:border-0 hover:bg-slate-200"
+                                onClick={() =>
+                                  setPaymentStatus(
+                                    order.id,
+                                    paymentStatusOptions.Paid
+                                  )
+                                }
+                              >
+                                Paid
+                              </li>
+                              <li
+                                className="p-2 border-b border-base-200 cursor-pointer last:border-0 hover:bg-slate-200"
+                                onClick={() =>
+                                  setPaymentStatus(
+                                    order.id,
+                                    paymentStatusOptions.Pending
+                                  )
+                                }
+                              >
+                                Pending
+                              </li>
+                            </ul>
+                          </div>
+                        </td> */}
+                        <td className="whitespace-nowrap py-5 pl-3 pr-4 text-right text-sm font-medium">
+                          <button
+                            className={`px-3 py-1 rounded-md bg-blue-50 text-blue-950`}
+                            onClick={() => {
+                              router.push(`/orders/${order.id}`);
+                            }}
+                          >
+                            {t('edit')}
+                          </button>
+
+                          <button
+                            className="px-3 py-1 rounded-md bg-red-50 text-red-950 ml-2"
+                            onClick={() => handleDeleteOrder(order.id)}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={7} className="text-center py-5">
+                        No orders found.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
           </div>
-          {/* Pagination Controls */}
+
           <div className="mt-4 flex justify-between">
             <button
               onClick={previousPage}
@@ -388,18 +290,6 @@ export default function OrdersPage() {
           </div>
         </div>
       </div>
-      {editOrderId && showModalForOrderId === editOrderId && (
-        <Modal
-          title="Add New Service"
-          onClose={() => setShowModalForOrderId(null)}
-          isOpen={showModalForOrderId === editOrderId}
-          onConfirm={handleConfirmNewService}
-        >
-          <div className="space-y-4">
-            <ServiceSelection />
-          </div>
-        </Modal>
-      )}
     </Layout>
   );
 }

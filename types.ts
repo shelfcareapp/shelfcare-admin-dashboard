@@ -1,22 +1,29 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Message {
-  sender: string;
   content: string;
   time: string;
-  imageUrls?: string[];
+  sender: string;
+  isRead: boolean;
   isAdmin: boolean;
+  imageUrls: string[];
+  options?: { label: string; value: string }[];
+  type?: string;
   id?: string;
-  isRead?: boolean;
+  timestamp?: Timestamp;
+  orderId?: string;
 }
-
 export type Chat = {
+  unreadCount: number;
   id: string;
   userId: string;
-  messages: any[];
+  messages: Message[];
   welcomeMessageSent?: boolean;
-  createdAt: any;
+  createdAt: never;
   name: string;
   email: string;
   isAutoReply?: boolean;
+  timestamp?: Timestamp;
 };
 
 export interface User {
@@ -41,6 +48,7 @@ export interface SelectableUser {
 
 export type ServiceSubOptions = {
   subOptionKey: string;
+  key?: string;
   price: number;
 };
 
@@ -55,6 +63,20 @@ export type SelectedServices = {
   subOptions?: ServiceSubOptions[];
 };
 
+export type Customer = {
+  id: string;
+  name: string;
+  email: string;
+  address: string;
+  entranceInfo: string;
+  phone: string;
+  postalCode: string;
+};
+export type DateTimeOption = {
+  date: string;
+  time: string;
+};
+
 export interface Order {
   id: string;
   customerId: string;
@@ -64,8 +86,10 @@ export interface Order {
   customerPhone: string;
   services: SelectedServices[];
   totalPrice: number;
-  status: string;
+  status: 'pending_customer_input' | 'confirmed' | 'completed';
+  createdAt: Date;
   paymentEnabled: boolean;
-  pickupTime?: string;
-  deliveryTime?: string;
+  pickupTime?: DateTimeOption;
+  deliveryTime?: DateTimeOption;
+  paymentStatus?: string;
 }

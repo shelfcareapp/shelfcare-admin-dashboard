@@ -30,8 +30,6 @@ const LaundryGroup = ({ laundryKeys, laundrySubOptionsKeys }) => {
     }
   };
 
-  console.log(tempSelectedServices);
-
   const handleAddToServices = () => {
     Object.keys(tempSelectedServices).forEach((serviceKey) => {
       const service = tempSelectedServices[serviceKey];

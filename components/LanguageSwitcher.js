@@ -1,5 +1,4 @@
 'use client';
-
 import { useState, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { CiGlobe } from 'react-icons/ci';
