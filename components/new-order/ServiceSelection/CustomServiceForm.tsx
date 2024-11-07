@@ -4,9 +4,11 @@ import {
   addSelectedService,
   setTotalPrice
 } from 'store/slices/service-selection-slice';
+import { useLocale } from 'use-intl';
 
 const CustomServiceForm = ({ customService, setCustomService, totalPrice }) => {
   const dispatch = useAppDispatch();
+  const locale = useLocale();
 
   const handleCustomServiceChange = (e) => {
     setCustomService((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -27,13 +29,19 @@ const CustomServiceForm = ({ customService, setCustomService, totalPrice }) => {
 
       dispatch(setTotalPrice(totalPrice + parseFloat(customService.price)));
 
-      setCustomService({ name: '', price: 0, parent: 'custom' });
+      setCustomService({
+        name: '',
+        price: 0,
+        parent: locale === 'fi' ? 'Räätälöity' : 'Custom'
+      });
     }
   };
 
   return (
     <div className="mt-8 w-3/4 max-w-md mx-auto">
-      <h3 className="text-lg font-semibold mb-4">Custom Service</h3>
+      <h3 className="text-lg font-semibold mb-4">
+        {locale === 'fi' ? 'Räätälöity palvelu' : 'Custom Service'}
+      </h3>
       <div className="flex justify-between items-center">
         <input
           type="text"
@@ -55,7 +63,7 @@ const CustomServiceForm = ({ customService, setCustomService, totalPrice }) => {
           className="bg-primary text-white px-4 py-2 rounded ml-4"
           onClick={handleCustomAddToServices}
         >
-          Add
+          {locale === 'fi' ? 'Lisää' : 'Add'}
         </button>
       </div>
     </div>

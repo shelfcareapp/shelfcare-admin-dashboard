@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import {
   tailoringKeys,
   tailoringServicesKeys,
@@ -22,6 +22,7 @@ import ServiceList from './ServiceList';
 
 const ServiceSelection = () => {
   const t = useTranslations('pricing');
+  const locale = useLocale();
 
   const totalPrice = useAppSelector(
     (state) => state.serviceSelection.totalPrice
@@ -43,9 +44,11 @@ const ServiceSelection = () => {
   };
 
   const getNamespace = () => {
-    if (activeTab === 0) return 'tailoring';
-    if (activeTab === 1) return 'cobbler';
-    if (activeTab === 2) return 'laundry';
+    if (activeTab === 0)
+      return locale === 'fi' ? 'Ompelupalvelut' : 'Tailoring';
+    if (activeTab === 1) return locale === 'fi' ? 'Suutaripalvelut' : 'Cobbler';
+    if (activeTab === 2)
+      return locale === 'fi' ? 'Pesu / Kuivapesu' : 'Laundry';
   };
 
   const renderActiveTabContent = () => {
