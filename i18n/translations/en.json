@@ -1,6 +1,6 @@
 {
   "header": {
-    "messages": "Messages",
+    "chats": "Chats",
     "orders": "Orders",
     "new-order": "New Order",
     "profile": "Profile",
@@ -14,13 +14,18 @@
     "order": "Order",
     "type-message": "Type a message...",
     "no-users": "No users found",
-    "select-user-text": "Select a user to start chatting"
+    "select-user-text": "Select a user to start chatting",
+    "unread": "unread message(s)"
   },
   "new-order": {
     "title": "New order",
     "back": "Back",
+    "next": "Next",
     "select-service": "Select a service",
-    "next-review": "Next: Review order"
+    "next-review": "Next: Review order",
+    "select-user": "Select a user",
+    "review-order": "Review order",
+    "confirm-order": "Confirm order"
   },
   "user-selection": {
     "title": "Select a user",
@@ -50,7 +55,14 @@
     "title": "Pricing Guidelines",
     "disclaimer": "The prices listed are starting prices and may vary based on the complexity and materials involved in each service. Additional charges may apply.",
     "quantity": "Quantity",
+    "discount": "Discount (%)",
+    "additional-info": "Additional Info",
+    "service-name": "Service Name",
+    "sub-options": "Sub-options",
+    "remove": "Remove",
     "custom-service": "Custom Service",
+    "select-sub-options": "Select sub-options",
+    "add-service": "Add Service",
     "price": "Price",
     "add": "Add",
     "categories": {
@@ -525,26 +537,128 @@
         "boots": {
           "title": "Boots",
           "services": {
-            "heel_replacement": {
-              "name": "Heel Replacement",
+            "heel_replacement_small": {
+              "name": "Heel replacement, Ø less than 1cm",
               "price": "28",
               "subOptions": {}
             },
-            "sole_replacement": {
-              "name": "Sole Replacement",
-              "price": "44",
-              "subOptions": {
-                "vibram_sole": { "name": "Vibram Sole", "price": "+10" }
-              }
-            },
-            "shoe_shine": {
-              "name": "Shoe Shine",
-              "price": "15",
+            "heel_replacement_medium": {
+              "name": "Heel replacement, Ø less than 5cm",
+              "price": "34",
               "subOptions": {}
             },
-            "leather_conditioning": {
-              "name": "Leather Conditioning",
-              "price": "20",
+            "heel_replacement_large": {
+              "name": "Heel replacement, Ø more than 5cm",
+              "price": "39",
+              "subOptions": {}
+            },
+            "heel_replacement_thick": {
+              "name": "Thick heel replacement",
+              "price": "45",
+              "subOptions": {}
+            },
+            "heel_relining": {
+              "name": "Heel relining + new heel caps",
+              "price": "86",
+              "subOptions": {}
+            },
+            "heel_attachment": {
+              "name": "Heel attachment per piece",
+              "price": "32",
+              "subOptions": {}
+            },
+            "sole_replacement": {
+              "name": "Sole replacement",
+              "price": "44",
+              "subOptions": {
+                "leather_sole": {
+                  "name": "Leather sole",
+                  "price": "+8"
+                },
+                "louboutin_sole": {
+                  "name": "Louboutin/Maison Margiela sole",
+                  "price": "+25"
+                }
+              }
+            },
+            "sole_replacement_boots": {
+              "name": "Sole replacement for boots",
+              "price": "46",
+              "subOptions": {}
+            },
+            "toe_piece_replacement": {
+              "name": "Toe piece replacement",
+              "price": "29",
+              "subOptions": {}
+            },
+            "tennis_shoe_resole": {
+              "name": "Tennis shoe resole",
+              "price": "109",
+              "subOptions": {}
+            },
+            "converse_resole": {
+              "name": "Converse resole",
+              "price": "138",
+              "subOptions": {}
+            },
+            "dr_martens_resole": {
+              "name": "Dr. Martens sole replacement",
+              "price": "109",
+              "subOptions": {}
+            },
+            "single_shoe_glue": {
+              "name": "Single shoe sole gluing",
+              "price": "23",
+              "subOptions": {}
+            },
+            "pair_shoe_glue": {
+              "name": "Pair of shoes sole gluing",
+              "price": "40",
+              "subOptions": {}
+            },
+            "inner_lining_repair": {
+              "name": "Inner lining repair",
+              "price": "29",
+              "subOptions": {}
+            },
+            "side_patch": {
+              "name": "Side patch",
+              "price": "37",
+              "subOptions": {}
+            },
+            "upper_patch": {
+              "name": "Upper patch",
+              "price": "23",
+              "subOptions": {}
+            },
+            "zipper_replacement_short_boots": {
+              "name": "Zipper replacement for ankle boots",
+              "price": "58",
+              "subOptions": {}
+            },
+            "zipper_replacement_tall_boots": {
+              "name": "Zipper replacement for tall boots",
+              "price": "75",
+              "subOptions": {}
+            },
+            "shoe_cleaning": {
+              "name": "Shoe cleaning and care",
+              "price": "25",
+              "subOptions": {}
+            },
+            "sneaker_cleaning": {
+              "name": "Sneaker cleaning and care",
+              "price": "75",
+              "subOptions": {}
+            },
+            "deep_leather_shoe_cleaning": {
+              "name": "Deep cleaning and care for leather shoes",
+              "price": "65",
+              "subOptions": {}
+            },
+            "premium_leather_shoe_cleaning": {
+              "name": "Premium deep cleaning for leather shoes",
+              "price": "75",
               "subOptions": {}
             }
           }
@@ -553,33 +667,58 @@
           "title": "Leather Jackets",
           "services": {
             "shortening_of_sleeves": {
-              "name": "Sleeve Shortening",
+              "name": "Sleeve shortening",
               "price": "65",
               "subOptions": {}
             },
             "shortening_sleeves_moving_elastic": {
-              "name": "Sleeve Shortening and Moving Elastic",
+              "name": "Sleeve shortening with welt relocation",
               "price": "75",
               "subOptions": {}
             },
+            "shortening_sleeves_with_zipper": {
+              "name": "Sleeve shortening with zipper relocation",
+              "price": "95",
+              "subOptions": {}
+            },
             "narrowing_leather_jacket": {
-              "name": "Leather Jacket Narrowing",
+              "name": "Leather jacket narrowing",
               "price": "95",
               "subOptions": {}
             },
             "replacing_zipper": {
-              "name": "Zipper Replacement",
+              "name": "Zipper replacement",
               "price": "89",
               "subOptions": {
-                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+                "metal_zipper": {
+                  "name": "Metal zipper",
+                  "price": "+8"
+                },
+                "long_zipper": {
+                  "name": "Length over knee",
+                  "price": "+45"
+                }
               }
             },
+            "motorcycle_jacket_zipper_replacement": {
+              "name": "Motorcycle jacket zipper replacement",
+              "price": "149",
+              "subOptions": {}
+            },
             "changing_lining": {
-              "name": "Lining Replacement",
+              "name": "Lining replacement",
               "price": "259",
               "subOptions": {
-                "lining_silk": { "name": "Silk Lining", "price": "+30" }
+                "lining_long": {
+                  "name": "Length over knee",
+                  "price": "+70"
+                }
               }
+            },
+            "deep_cleaning": {
+              "name": "Deep cleaning for leather jacket",
+              "price": "92",
+              "subOptions": {}
             }
           }
         },
@@ -587,28 +726,119 @@
           "title": "Leather Pants",
           "services": {
             "leg_shortening": {
-              "name": "Leg Shortening",
+              "name": "Leg shortening",
               "price": "39",
               "subOptions": {}
             },
             "leg_narrowing": {
-              "name": "Leg Narrowing",
+              "name": "Leg narrowing",
               "price": "49",
               "subOptions": {}
             },
             "zipper_replacement_thin_leather": {
-              "name": "Zipper Replacement (Thin Leather)",
+              "name": "Zipper replacement (thin leather)",
               "price": "49",
               "subOptions": {
-                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+                "metal_zipper": {
+                  "name": "Metal zipper",
+                  "price": "+8"
+                }
               }
             },
             "zipper_replacement_thick_leather": {
-              "name": "Zipper Replacement (Thick Leather)",
+              "name": "Zipper replacement (thick leather)",
               "price": "59",
               "subOptions": {
-                "metal_zipper": { "name": "Metal Zipper", "price": "+8" }
+                "metal_zipper": {
+                  "name": "Metal zipper",
+                  "price": "+8"
+                }
               }
+            }
+          }
+        },
+        "bags": {
+          "title": "Bags",
+          "services": {
+            "zipper_replacement_short": {
+              "name": "Zipper replacement (zipper less than 30cm)",
+              "price": "50",
+              "subOptions": {
+                "leather_bag": {
+                  "name": "Leather bag",
+                  "price": "+15"
+                }
+              }
+            },
+            "zipper_replacement_long": {
+              "name": "Zipper replacement (zipper more than 30cm)",
+              "price": "79",
+              "subOptions": {
+                "leather_bag": {
+                  "name": "Leather bag",
+                  "price": "+25"
+                }
+              }
+            },
+            "inner_zipper_replacement": {
+              "name": "Inner zipper replacement for lined bag",
+              "price": "29",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metal zipper",
+                  "price": "+8"
+                }
+              }
+            },
+            "backpack_zipper_replacement": {
+              "name": "Backpack zipper replacement",
+              "price": "59",
+              "subOptions": {
+                "metal_zipper": {
+                  "name": "Metal zipper",
+                  "price": "+8"
+                }
+              }
+            },
+            "leather_strap_repair": {
+              "name": "Leather strap stitching repair",
+              "price": "15",
+              "subOptions": {}
+            },
+            "leather_strap_patch": {
+              "name": "Leather strap patch repair",
+              "price": "26",
+              "subOptions": {}
+            }
+          }
+        },
+        "other_cobbler_services": {
+          "title": "Other Cobbler Services",
+          "services": {
+            "button_sewing": {
+              "name": "Button sewing on leather goods",
+              "price": "9",
+              "subOptions": {}
+            },
+            "tear_repair_small": {
+              "name": "Tear repair, tear less than 5cm",
+              "price": "25",
+              "subOptions": {}
+            },
+            "tear_repair_large": {
+              "name": "Tear repair, tear more than 5cm",
+              "price": "35",
+              "subOptions": {}
+            },
+            "stitching_repair": {
+              "name": "Stitching repairs, e.g., torn seam",
+              "price": "22",
+              "subOptions": {}
+            },
+            "stain_removal_small": {
+              "name": "Stain removal, less than 20cm",
+              "price": "25",
+              "subOptions": {}
             }
           }
         }
@@ -718,6 +948,8 @@
     "continue": "Continue",
     "orderSuccess": "Order has been submitted successfully!",
     "error": "There was an error. Please try again later.",
-    "emailSuccess": "Email sent successfully!"
+    "emailSuccess": "Email sent successfully!",
+    "messages": "Messages",
+    "edit": "Edit"
   }
 }
