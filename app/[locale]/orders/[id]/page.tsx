@@ -67,7 +67,7 @@ const OrderPage = () => {
 
   const finalMessage =
     locale === 'fi'
-      ? `<div style="font-size: 12px !important;">
+      ? `<div>
       <p style="margin-bottom: 10px">Palveluntarjoajamme ehdotti uusia palveluja. Tässä on päivitetty palvelusuunnitelmasi ja tietoa ehdotetuista palveluista:</p>
       <ol style="padding-left: 0; margin-top: 0;">${message(
         selectedServices,
@@ -80,7 +80,7 @@ const OrderPage = () => {
       <p>Yhteensä: ${finalPrice}€</p>
       <p style="margin-top: 15px;">Jos haluat jatkaa ehdotetun palvelusuunnitelman mukaisesti, paina kyllä. Jos haluat pitäytyä alkuperäisessä palvelusuunnitelmassa, paina ei. Jos sinulla on kysyttävää päivitetystä palvelusuunnitelmasta, lähetä meille viesti!</p>
     </div>`
-      : `<div font-size: 12px !important;>
+      : `<div>
       <p style="margin-bottom: 10px">Our services provider suggested new services. Here's your updated service plan and information about the suggested services:</p>
       <ol style="padding-left: 0; margin-top: 0;">${message(
         selectedServices,
