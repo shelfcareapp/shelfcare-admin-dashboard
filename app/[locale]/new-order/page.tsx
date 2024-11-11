@@ -22,7 +22,6 @@ import {
 import { fetchNonAdminUsers, selectUsers } from 'store/slices/users-slice';
 import { createOrder } from 'store/slices/order-selection-slice';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
-import { DELIVERY_FEE } from '../../../constants';
 import { useRouter } from 'next/navigation';
 import { calculateTotalPrice } from 'utils/calculate-total-price';
 import {
@@ -104,6 +103,7 @@ const NewOrderPage = () => {
 
       router.push('/orders');
     } catch (error) {
+      console.error(error);
       toast.error('Failed to create order. Please try again.');
     }
   };
