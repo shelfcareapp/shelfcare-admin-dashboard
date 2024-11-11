@@ -49,7 +49,8 @@
     "customer": "Customer",
     "address": "Address info",
     "save-order": "Save Order",
-    "email": "Email"
+    "email": "Email",
+    "additional-info": "Additional Info"
   },
   "pricing": {
     "title": "Pricing Guidelines",
@@ -857,7 +858,7 @@
           "price": "17",
           "subOptions": {
             "length_over_knee": {
-              "name": "Length Over Knee",
+              "name": "Length over knee",
               "price": "+9"
             }
           }
@@ -867,71 +868,95 @@
           "price": "38",
           "subOptions": {
             "silk_suit": {
-              "name": "Silk Suit",
+              "name": "Silk suit",
               "price": "+15"
-            },
-            "suit_with_vest": {
-              "name": "Suit with Vest",
-              "price": "46"
             }
           }
         },
+        "suit_vest": {
+          "name": "Suit vest",
+          "price": "46"
+        },
         "dress_mini": {
-          "name": "Mini Dress",
+          "name": "Mini dress",
           "price": "32"
         },
         "dress_midi": {
-          "name": "Midi Dress",
+          "name": "Midi dress",
           "price": "39"
         },
         "dress_maxi": {
-          "name": "Maxi Dress",
+          "name": "Maxi dress",
           "price": "45"
         },
         "evening_dress": {
-          "name": "Evening Dress",
+          "name": "Evening dress",
           "price": "68"
         },
         "jacket": {
-          "name": "Jacket / Blazer",
+          "name": "Jacket / blazer",
           "price": "26"
+        },
+        "tie": {
+          "name": "Tie / bow tie",
+          "price": "10"
+        },
+        "shirt": {
+          "name": "Shirt",
+          "price": "10",
+          "subOptions": {
+            "silk_shirt": {
+              "name": "Silk shirt",
+              "price": "+7"
+            }
+          }
+        },
+        "scarf": {
+          "name": "Scarf",
+          "price": "10",
+          "subOptions": {
+            "silk_scarf": {
+              "name": "Silk scarf",
+              "price": "+7"
+            }
+          }
         },
         "coat": {
           "name": "Coat",
           "price": "39",
           "subOptions": {
             "wool_coat": {
-              "name": "Wool Coat",
+              "name": "Wool coat",
               "price": "+5"
             },
             "length_over_knee": {
-              "name": "Length Over Knee",
+              "name": "Length over the knee",
               "price": "+10"
             }
           }
         },
         "winter_jacket": {
-          "name": "Winter Jacket",
+          "name": "Winter jacket",
           "price": "27",
           "subOptions": {
             "length_over_knee": {
-              "name": "Length Over Knee",
+              "name": "Length over the knee",
               "price": "+10"
             }
           }
         },
         "down_jacket": {
-          "name": "Down Jacket",
+          "name": "Down jacket",
           "price": "39",
           "subOptions": {
             "length_over_knee": {
-              "name": "Length Over Knee",
+              "name": "Length over the knee",
               "price": "+10"
             }
           }
         },
         "canada_goose_jacket": {
-          "name": "Canada Goose Jacket",
+          "name": "Canada Goose jacket",
           "price": "59"
         }
       }

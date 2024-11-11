@@ -2,8 +2,12 @@
 
 import { useTranslations } from 'next-intl';
 import React from 'react';
+import { useAppSelector, useAppDispatch } from 'hooks/use-store';
 import { Customer, SelectedServices } from 'types';
-import { DELIVERY_FEE } from '../../constants';
+import {
+  setDeliveryFee,
+  setAdditionalInfo
+} from 'store/slices/service-selection-slice';
 
 interface OrderSummaryProps {
   selectedServices: SelectedServices[];
@@ -17,9 +21,16 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
   customer
 }) => {
   const t = useTranslations('order-review');
+  const deliveryFee = useAppSelector(
+    (state) => state.serviceSelection.deliveryFee
+  );
+  const additionalInfo = useAppSelector(
+    (state) => state.serviceSelection.additionalInfo
+  );
+  const dispatch = useAppDispatch();
 
   const calculateTotalPayable = () => {
-    const totalPayable = totalPrice + DELIVERY_FEE;
+    const totalPayable = totalPrice + deliveryFee;
     return Math.round(totalPayable * 100) / 100;
   };
 
@@ -93,9 +104,22 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
             <p>{t('subtotal')}</p>
             <p>{totalPrice.toFixed(2)} €</p>
           </div>
-          <div className="flex justify-between text-sm text-gray-500">
+          <div className="flex justify-between text-sm text-gray-500 mt-3">
             <p>{t('delivery-service-fees')}</p>
-            <p>{DELIVERY_FEE.toFixed(2)} €</p>
+            <input
+              type="number"
+              value={deliveryFee}
+              onChange={(e) => dispatch(setDeliveryFee(Number(e.target.value)))}
+              className="w-12 p-2 border border-gray-300 rounded"
+            />
+          </div>
+          <div className="flex justify-between text-sm text-gray-500 mt-3">
+            <p>{t('additional-info')}</p>
+            <textarea
+              value={additionalInfo}
+              onChange={(e) => dispatch(setAdditionalInfo(e.target.value))}
+              className="w-72 p-2 border border-gray-300 rounded"
+            />
           </div>
 
           <div className="flex justify-between text-lg font-semibold mt-4">

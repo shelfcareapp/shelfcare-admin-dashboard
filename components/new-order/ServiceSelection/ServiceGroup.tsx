@@ -86,7 +86,7 @@ const ServiceGroup = ({
   };
 
   return groupKeys.map((groupKey) => {
-    const groupTitle = t(`${namespace}.groups.${groupKey}.title`);
+    const groupTitle = t(`${namespace.toLowerCase()}.groups.${groupKey}.title`);
     const isExpanded = expandedGroups[groupKey];
 
     return (
@@ -122,10 +122,10 @@ const ServiceGroup = ({
                         handleServiceToggle(
                           serviceKey,
                           t(
-                            `${namespace}.groups.${groupKey}.services.${serviceKey}.name`
+                            `${namespace.toLowerCase()}.groups.${groupKey}.services.${serviceKey}.name`
                           ),
                           t(
-                            `${namespace}.groups.${groupKey}.services.${serviceKey}.price`
+                            `${namespace.toLowerCase()}.groups.${groupKey}.services.${serviceKey}.price`
                           ) as unknown as number
                         )
                       }
@@ -133,13 +133,13 @@ const ServiceGroup = ({
                     />
                     <span>
                       {t(
-                        `${namespace}.groups.${groupKey}.services.${serviceKey}.name`
+                        `${namespace.toLowerCase()}.groups.${groupKey}.services.${serviceKey}.name`
                       )}
                     </span>
                   </label>
                   <span>
                     {t(
-                      `${namespace}.groups.${groupKey}.services.${serviceKey}.price`
+                      `${namespace.toLowerCase()}.groups.${groupKey}.services.${serviceKey}.price`
                     )}{' '}
                     €
                   </span>
@@ -186,11 +186,11 @@ const ServiceGroup = ({
                     {subOptionsKeys[serviceKey] &&
                       subOptionsKeys[serviceKey].map((subOptionKey) => {
                         const name = t(
-                          `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.name`
+                          `${namespace.toLowerCase()}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.name`
                         );
                         const price = Number(
                           t(
-                            `${namespace}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.price`
+                            `${namespace.toLowerCase()}.groups.${groupKey}.services.${serviceKey}.subOptions.${subOptionKey}.price`
                           )
                         );
 

@@ -49,7 +49,8 @@
     "customer": "Asiakas",
     "address": "Osoite",
     "save-order": "Tallenna tilaus",
-    "email": "Sähköposti"
+    "email": "Sähköposti",
+    "additional-info": "Lisätiedot"
   },
   "pricing": {
     "title": "Hinnasto",
@@ -902,12 +903,12 @@
             "silk_suit": {
               "name": "Silkkipuku",
               "price": "+15"
-            },
-            "suit_with_vest": {
-              "name": "Puku liivillä",
-              "price": "46"
             }
           }
+        },
+        "suit_vest": {
+          "name": "Puvun liivi",
+          "price": "46"
         },
         "dress_mini": {
           "name": "Mekko, mini",
@@ -929,6 +930,30 @@
           "name": "Jakku / pikkutakki",
           "price": "26"
         },
+        "tie": {
+          "name": "Solmio / rusetti",
+          "price": "10"
+        },
+        "shirt": {
+          "name": "Paita",
+          "price": "10",
+          "subOptions": {
+            "silk_shirt": {
+              "name": "Villa / silkkipaita",
+              "price": "+7"
+            }
+          }
+        },
+        "scarf": {
+          "name": "Huivi",
+          "price": "10",
+          "subOptions": {
+            "silk_scarf": {
+              "name": "Villahuivi / silkkihuivi",
+              "price": "+7"
+            }
+          }
+        },
         "coat": {
           "name": "Kangastakki",
           "price": "39",
@@ -945,13 +970,7 @@
         },
         "winter_jacket": {
           "name": "Toppatakki",
-          "price": "27",
-          "subOptions": {
-            "length_over_knee": {
-              "name": "Pituus yli polven",
-              "price": "+10"
-            }
-          }
+          "price": "27"
         },
         "down_jacket": {
           "name": "Untuvatakki",
@@ -964,7 +983,7 @@
           }
         },
         "canada_goose_jacket": {
-          "name": "Canada Goose -takki",
+          "name": "Canada Goose -takit",
           "price": "59"
         }
       }

@@ -2,15 +2,20 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../store';
 import { SelectedServices } from 'types';
 import { v4 as uuidv4 } from 'uuid';
+import { DELIVERY_FEE } from '../../constants';
 
 interface ServiceSelectionState {
   selectedServices: SelectedServices[];
   totalPrice: number;
+  deliveryFee: number;
+  additionalInfo?: string;
 }
 
 const initialState: ServiceSelectionState = {
   selectedServices: [],
-  totalPrice: 0
+  totalPrice: 0,
+  deliveryFee: DELIVERY_FEE,
+  additionalInfo: ''
 };
 
 const serviceSelectionSlice = createSlice({
@@ -82,6 +87,12 @@ const serviceSelectionSlice = createSlice({
     },
     setTotalPrice: (state, action: PayloadAction<number>) => {
       state.totalPrice = action.payload;
+    },
+    setDeliveryFee: (state, action: PayloadAction<number>) => {
+      state.deliveryFee = action.payload;
+    },
+    setAdditionalInfo: (state, action: PayloadAction<string>) => {
+      state.additionalInfo = action.payload;
     }
   }
 });
@@ -91,12 +102,18 @@ export const {
   removeSelectedService,
   updateSelectedService,
   setTotalPrice,
-  setSelectedServices
+  setSelectedServices,
+  setDeliveryFee,
+  setAdditionalInfo
 } = serviceSelectionSlice.actions;
 
 export const selectSelectedServices = (state: RootState) =>
   state.serviceSelection.selectedServices;
 export const selectTotalPrice = (state: RootState) =>
   state.serviceSelection.totalPrice;
+export const selectDeliveryFee = (state: RootState) =>
+  state.serviceSelection.deliveryFee;
+export const selectAdditionalInfo = (state: RootState) =>
+  state.serviceSelection.additionalInfo;
 
 export default serviceSelectionSlice.reducer;

@@ -92,4 +92,6 @@ export interface Order {
   pickupTime?: DateTimeOption;
   deliveryTime?: DateTimeOption;
   paymentStatus?: string;
+  deliveryFee?: number;
+  additionalInfo?: string;
 }

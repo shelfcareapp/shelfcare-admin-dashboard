@@ -15,13 +15,21 @@ import {
 } from 'store/slices/user-selection-slice';
 import {
   selectSelectedServices,
-  selectTotalPrice
+  selectTotalPrice,
+  selectAdditionalInfo,
+  selectDeliveryFee
 } from 'store/slices/service-selection-slice';
 import { fetchNonAdminUsers, selectUsers } from 'store/slices/users-slice';
 import { createOrder } from 'store/slices/order-selection-slice';
 import { FiArrowLeft, FiArrowRight } from 'react-icons/fi';
 import { DELIVERY_FEE } from '../../../constants';
 import { useRouter } from 'next/navigation';
+import { calculateTotalPrice } from 'utils/calculate-total-price';
+import {
+  additionalInfoText,
+  deliveryFeeText,
+  message
+} from 'utils/order-confirmation-message';
 
 const NewOrderPage = () => {
   const router = useRouter();
@@ -31,8 +39,12 @@ const NewOrderPage = () => {
 
   const selectedUser = useAppSelector(selectSelectedUser);
   const selectedServices = useAppSelector(selectSelectedServices);
+  const deliveryFee = useAppSelector(selectDeliveryFee);
+  const additionalInfo = useAppSelector(selectAdditionalInfo);
   const totalPrice = useAppSelector(selectTotalPrice);
   const users = useAppSelector(selectUsers);
+
+  const finalPrice = calculateTotalPrice(totalPrice, deliveryFee);
 
   const t = useTranslations('new-order');
 
@@ -48,60 +60,32 @@ const NewOrderPage = () => {
     setStep((prevStep) => Math.max(prevStep - 1, 1));
   };
 
-  const message = selectedServices
-    .map((service, index) => {
-      const subOptionsText = service.subOptions?.length
-        ? `<div style="margin-top: 4px;">
-          <strong>${
-            locale === 'fi' ? 'Lisävalinnat' : 'Additional options'
-          }:</strong> ${service.subOptions
-            .map((opt) => `${opt.key} (+${opt.price} €)`)
-            .join(', ')}
-        </div>`
-        : '';
-
-      const additionalInfoText = service.additionalInfo
-        ? `<div style="margin-top: 4px;">
-          <strong>${
-            locale === 'fi' ? 'Lisätiedot' : 'Additional information'
-          }:</strong> ${service.additionalInfo}
-        </div>`
-        : '';
-
-      const discountText = service.discount
-        ? `<div style="margin-top: 4px;">
-          <strong>${locale === 'fi' ? 'Alennus' : 'Discount'}:</strong> ${
-            service.discount
-          }%
-        </div>`
-        : '';
-
-      return `
-    <li style="list-style-type: none; padding: 12px; margin-bottom: 10px; border-bottom: 1px solid #ddd;">
-      <div><strong>${index + 1}. ${service.name}</strong> - €${
-        service.price
-      }</div>
-      ${subOptionsText}
-      ${additionalInfoText}
-      ${discountText}
-    </li>`;
-    })
-    .join('');
-
   const finalMessage =
     locale === 'fi'
       ? `<div style="margin-bottom: 10px">
-        <p>Tässä on palvelusuunnitelmasi:</p>
-        <ol style="padding-left: 0; margin-top: 0;">${message}</ol>
-        <p style="margin-top: 20px;">Palvelu- ja toimitusmaksu: <strong>€${DELIVERY_FEE}</strong></p>
-        <p>Yhteensä: <strong>€${totalPrice}</strong></p>
+        <p style="margin-bottom: 10px">Tässä on palvelusuunnitelmasi:</p>
+        <ol style="padding-left: 0; margin-top: 0;">${message(
+          selectedServices,
+          locale
+        )}</ol>
+        <div style="margin-top: 15px;">
+        ${deliveryFeeText(deliveryFee, locale)}
+        ${additionalInfoText(additionalInfo, locale)}
+        </div>
+        <p>Yhteensä: <strong>€${finalPrice}</strong></p>
         <p style="margin-top: 15px;">Valitse nouto- ja palautusajat:</p>
       </div>`
       : `<div>
-        <p>Here is your service plan:</p>
-        <ol style="padding-left: 0; margin-top: 0;">${message}</ol>
-        <p style="margin-top: 20px;">Service and delivery fee: <strong>€${DELIVERY_FEE}</strong></p>
-        <p>Total: <strong>€${totalPrice}</strong></p>
+        <p style="margin-bottom: 10px">Here is your service plan:</p>
+        <ol style="padding-left: 0; margin-top: 0;">${message(
+          selectedServices,
+          locale
+        )}</ol>
+        <div style="margin-top: 15px;">
+        ${deliveryFeeText(deliveryFee, locale)}
+        ${additionalInfoText(additionalInfo, locale)}
+        </div>
+        <p>Total: <strong>€${finalPrice}</strong></p>
         <p style="margin-top: 15px;">Please select a pickup and delivery time:</p>
       </div>`;
 
@@ -111,14 +95,15 @@ const NewOrderPage = () => {
         createOrder({
           selectedUser,
           selectedServices,
-          totalPrice,
-          message: finalMessage
+          totalPrice: finalPrice,
+          message: finalMessage,
+          deliveryFee,
+          additionalInfo
         })
       ).unwrap();
 
       router.push('/orders');
     } catch (error) {
-      console.error(error);
       toast.error('Failed to create order. Please try again.');
     }
   };

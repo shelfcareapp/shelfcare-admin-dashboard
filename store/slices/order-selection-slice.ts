@@ -12,6 +12,7 @@ import {
 import { toast } from 'react-toastify';
 import { SelectedServices } from 'types';
 import { sendMessage } from './chats-slice';
+import { DELIVERY_FEE } from '../../constants';
 
 interface OrderState {
   loading: boolean;
@@ -30,24 +31,26 @@ export const createOrder = createAsyncThunk(
       selectedUser,
       selectedServices,
       totalPrice,
-      message
+      message,
+      deliveryFee,
+      additionalInfo
     }: {
       selectedUser: { id: string; name: string; email: string };
       selectedServices: SelectedServices[];
       totalPrice: number;
       message: string;
+      deliveryFee?: number;
+      additionalInfo?: string;
     },
     { dispatch }
   ) => {
     try {
-      const finalPrice = totalPrice + 10;
-
       const orderData = {
         customerId: selectedUser.id,
         customerName: selectedUser.name,
         customerEmail: selectedUser.email,
         services: selectedServices,
-        totalPrice: finalPrice,
+        totalPrice,
         pickupTime: {
           date: '',
           time: ''
@@ -58,7 +61,9 @@ export const createOrder = createAsyncThunk(
         },
         status: 'pending_customer_input',
         createdAt: new Date().toString(),
-        paymentEnabled: false
+        paymentEnabled: false,
+        deliveryFee: deliveryFee || DELIVERY_FEE,
+        additionalInfo
       };
 
       const orderRef = await addDoc(collection(db, 'orders'), orderData);
@@ -108,23 +113,27 @@ export const updateOrder = createAsyncThunk(
       selectedServices,
       totalPrice,
       message,
-      userId
+      userId,
+      deliveryFee,
+      additionalInfo
     }: {
       id: string;
       selectedServices: SelectedServices[];
       totalPrice: number;
       message?: string;
       userId?: string;
+      deliveryFee?: number;
+      additionalInfo?: string;
     },
     { dispatch }
   ) => {
     try {
-      const finalPrice = totalPrice + 10;
-
       const orderData = {
         services: selectedServices,
-        totalPrice: finalPrice,
-        status: 'pending_customer_input'
+        totalPrice,
+        status: 'pending_customer_input',
+        deliveryFee: deliveryFee || DELIVERY_FEE,
+        additionalInfo
       };
 
       const orderRef = doc(db, 'orders', id);

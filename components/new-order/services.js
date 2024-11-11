@@ -336,7 +336,6 @@ const cobblerServices = {
   ]
 };
 
-// Laundry Services
 const laundryServices = [
   { name: 'Housut pesu', price: 18 },
   {
@@ -383,5 +382,4 @@ const laundryServices = [
   { name: 'Canada Goose –takit pesu', price: 59 }
 ];
 
-// Exporting all services
 export { tailoringServices, cobblerServices, laundryServices };

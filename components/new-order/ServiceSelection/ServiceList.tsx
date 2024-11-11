@@ -13,7 +13,7 @@ const ServiceList = () => {
   const groupedServices = Object.keys(selectedServices).reduce(
     (acc, key) => {
       const service = selectedServices[key];
-      const parentGroup = service.parent;
+      const parentGroup = service.parent.toLowerCase();
       if (!acc[parentGroup]) {
         acc[parentGroup] = [];
       }
