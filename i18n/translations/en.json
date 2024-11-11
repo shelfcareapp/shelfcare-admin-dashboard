@@ -874,7 +874,7 @@
           }
         },
         "suit_vest": {
-          "name": "Suit vest",
+          "name": "Suit with vest",
           "price": "46"
         },
         "dress_mini": {
@@ -906,7 +906,7 @@
           "price": "10",
           "subOptions": {
             "silk_shirt": {
-              "name": "Silk shirt",
+              "name": "Silk / Wool shirt",
               "price": "+7"
             }
           }
@@ -916,7 +916,7 @@
           "price": "10",
           "subOptions": {
             "silk_scarf": {
-              "name": "Silk scarf",
+              "name": "Silk / Wool scarf",
               "price": "+7"
             }
           }
