@@ -5,7 +5,7 @@ export const message = (selectedServices: SelectedServices[], locale: string) =>
     .map((service, index) => {
       const subOptionsText = service.subOptions?.length
         ? `<div style="margin-top: 4px;  font-size: 12px; padding-left: 10px;">
-    <span style="font-weight: 500;">${
+    <span>${
       locale === 'fi' ? 'Lisävalinnat' : 'Additional options'
     }:</span> ${service.subOptions
             .map((opt) => `${opt.key} (+${opt.price} €)`)
@@ -15,7 +15,7 @@ export const message = (selectedServices: SelectedServices[], locale: string) =>
 
       const additionalInfoText = service.additionalInfo
         ? `<div style="margin-top: 4px; font-size: 12px; padding-left: 10px;">
-    <span style="font-weight: 500;">${
+    <span>${
       locale === 'fi' ? 'Lisätiedot' : 'Additional information'
     }:</span> ${service.additionalInfo}
   </div>`
@@ -23,9 +23,9 @@ export const message = (selectedServices: SelectedServices[], locale: string) =>
 
       const discountText = service.discount
         ? `<div style="margin-top: 4px; font-size: 12px; padding-left: 10px;">
-    <span style="font-weight: 500;">${
-      locale === 'fi' ? 'Alennus' : 'Discount'
-    }:</span> ${service.discount}%
+    <span>${locale === 'fi' ? 'Alennus' : 'Discount'}:</span> ${
+            service.discount
+          }%
   </div>`
         : '';
 

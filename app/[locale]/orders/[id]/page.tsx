@@ -67,7 +67,7 @@ const OrderPage = () => {
 
   const finalMessage =
     locale === 'fi'
-      ? `<div style="margin-bottom: 10px">
+      ? `<div style="font-size: 12px !important;">
       <p style="margin-bottom: 10px">Palveluntarjoajamme ehdotti uusia palveluja. Tässä on päivitetty palvelusuunnitelmasi ja tietoa ehdotetuista palveluista:</p>
       <ol style="padding-left: 0; margin-top: 0;">${message(
         selectedServices,
@@ -77,10 +77,10 @@ const OrderPage = () => {
       ${deliveryFeeText(deliveryFee, locale)}
       ${additionalInfoText(additionalInfo, locale)}
       </div>
-      <p>Yhteensä: €${finalPrice}</p>
+      <p>Yhteensä: ${finalPrice}€</p>
       <p style="margin-top: 15px;">Jos haluat jatkaa ehdotetun palvelusuunnitelman mukaisesti, paina kyllä. Jos haluat pitäytyä alkuperäisessä palvelusuunnitelmassa, paina ei. Jos sinulla on kysyttävää päivitetystä palvelusuunnitelmasta, lähetä meille viesti!</p>
     </div>`
-      : `<div>
+      : `<div font-size: 12px !important;>
       <p style="margin-bottom: 10px">Our services provider suggested new services. Here's your updated service plan and information about the suggested services:</p>
       <ol style="padding-left: 0; margin-top: 0;">${message(
         selectedServices,
@@ -90,7 +90,7 @@ const OrderPage = () => {
       ${deliveryFeeText(deliveryFee, locale)}
       ${additionalInfoText(additionalInfo, locale)}
       </div>
-      <p>Total: €${finalPrice}</p>
+      <p>Total: ${finalPrice}€</p>
       <p style="margin-top: 15px;">If you wish to proceed with the suggested service plan, press yes. If you want to stick to the original service plan, press no. If you have any questions regarding the updated service plan, send us a message!</p>
     </div>`;
 

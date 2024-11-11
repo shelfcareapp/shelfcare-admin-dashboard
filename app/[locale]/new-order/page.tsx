@@ -61,7 +61,7 @@ const NewOrderPage = () => {
 
   const finalMessage =
     locale === 'fi'
-      ? `<div style="margin-bottom: 10px">
+      ? `<div style="font-size: 12px !important;">
         <p style="margin-bottom: 10px">Tässä on palvelusuunnitelmasi:</p>
         <ol style="padding-left: 0; margin-top: 0;">${message(
           selectedServices,
@@ -71,10 +71,10 @@ const NewOrderPage = () => {
         ${deliveryFeeText(deliveryFee, locale)}
         ${additionalInfoText(additionalInfo, locale)}
         </div>
-        <p>Yhteensä: <strong>€${finalPrice}</strong></p>
+        <p>Yhteensä: ${finalPrice}€</p>
         <p style="margin-top: 15px;">Valitse nouto- ja palautusajat:</p>
       </div>`
-      : `<div>
+      : `<div style="font-size: 12px !important;">
         <p style="margin-bottom: 10px">Here is your service plan:</p>
         <ol style="padding-left: 0; margin-top: 0;">${message(
           selectedServices,
@@ -84,7 +84,7 @@ const NewOrderPage = () => {
         ${deliveryFeeText(deliveryFee, locale)}
         ${additionalInfoText(additionalInfo, locale)}
         </div>
-        <p>Total: <strong>€${finalPrice}</strong></p>
+        <p>Total: ${finalPrice}€</p>
         <p style="margin-top: 15px;">Please select a pickup and delivery time:</p>
       </div>`;
 
