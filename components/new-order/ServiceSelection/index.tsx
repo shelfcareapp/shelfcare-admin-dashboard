@@ -43,12 +43,17 @@ const ServiceSelection = () => {
     }));
   };
 
+  // const getNamespace = () => {
+  //   if (activeTab === 0)
+  //     return locale === 'fi' ? 'Ompelupalvelut' : 'Tailoring';
+  //   if (activeTab === 1) return locale === 'fi' ? 'Suutaripalvelut' : 'Cobbler';
+  //   if (activeTab === 2)
+  //     return locale === 'fi' ? 'Pesu / Kuivapesu' : 'Laundry';
+  // };
   const getNamespace = () => {
-    if (activeTab === 0)
-      return locale === 'fi' ? 'Ompelupalvelut' : 'Tailoring';
-    if (activeTab === 1) return locale === 'fi' ? 'Suutaripalvelut' : 'Cobbler';
-    if (activeTab === 2)
-      return locale === 'fi' ? 'Pesu / Kuivapesu' : 'Laundry';
+    if (activeTab === 0) return 'tailoring';
+    if (activeTab === 1) return 'cobbler';
+    if (activeTab === 2) return 'laundry';
   };
 
   const renderActiveTabContent = () => {

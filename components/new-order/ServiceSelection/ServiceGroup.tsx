@@ -35,7 +35,7 @@ const ServiceGroup = ({
     });
   };
 
-  const handleSubOptionChange = (e, serviceKey, subOptionKey, price) => {
+  const handleSubOptionChange = (e, serviceKey, subOptionKey, price, name) => {
     const isChecked = e.target.checked;
 
     setTempSelectedServices((prev) => {
@@ -43,7 +43,7 @@ const ServiceGroup = ({
       const currentSubOptions = currentService.subOptions || [];
 
       const updatedSubOptions = isChecked
-        ? [...currentSubOptions, { key: subOptionKey, price }]
+        ? [...currentSubOptions, { key: subOptionKey, price, name }]
         : currentSubOptions.filter((option) => option.key !== subOptionKey);
 
       return {
@@ -212,7 +212,8 @@ const ServiceGroup = ({
                                   e,
                                   serviceKey,
                                   subOptionKey,
-                                  price
+                                  price,
+                                  name
                                 )
                               }
                             />

@@ -75,7 +75,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                             {selectedServices[serviceKey].subOptions.map(
                               (subOption) => (
                                 <li key={subOption.key}>
-                                  {subOption.key} - {subOption.price} €
+                                  {subOption.name} - {subOption.price} €
                                 </li>
                               )
                             )}

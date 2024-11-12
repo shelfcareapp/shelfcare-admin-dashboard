@@ -57,7 +57,7 @@ const ServiceList = () => {
                     {service.subOptions.map((subOption, index) => {
                       return (
                         <span key={index}>
-                          {subOption.key}:{' '}
+                          {subOption.name}:{' '}
                           {subOption.price ? `${subOption.price} €` : 'N/A'}
                         </span>
                       );

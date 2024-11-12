@@ -50,6 +50,7 @@ export type ServiceSubOptions = {
   subOptionKey: string;
   key?: string;
   price: number;
+  name?: string;
 };
 
 export type SelectedServices = {

@@ -8,7 +8,7 @@ export const message = (selectedServices: SelectedServices[], locale: string) =>
     <span>${
       locale === 'fi' ? 'Lisävalinnat' : 'Additional options'
     }:</span> ${service.subOptions
-            .map((opt) => `${opt.key} (+${opt.price} €)`)
+            .map((opt) => `${opt.name} (+${opt.price} €)`)
             .join(', ')}
   </div>`
         : '';
