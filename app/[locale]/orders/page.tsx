@@ -194,12 +194,12 @@ export default function OrdersPage() {
                           {order.totalPrice} €
                         </td>
                         <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                          {order.pickupTime.date.toString()} - klo{' '}
-                          {order.pickupTime.time.toString()}
+                          {order?.pickupTime?.date?.toString()}{' '}
+                          {order?.pickupTime?.time?.toString()}
                         </td>
                         <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">
-                          {order.deliveryTime.date.toString()} - klo{' '}
-                          {order.deliveryTime.time.toString()}
+                          {order?.deliveryTime?.date?.toString()}{' '}
+                          {order?.deliveryTime?.time?.toString()}
                         </td>
                         {/* <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500 text-center">
                           <div className="dropdown">
