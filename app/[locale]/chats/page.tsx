@@ -289,12 +289,12 @@ export default function Component() {
                 </div>
                 <span className="text-lg font-medium">{selectedChat.name}</span>
               </div>
-              <button
+              {/* <button
                 className="bg-primary cursor-pointer p-2 rounded-lg text-white"
                 onClick={handleUserSelection}
               >
                 {locale === 'fi' ? 'Tee uusi tilaus' : 'Make new order'}
-              </button>
+              </button> */}
               <NewChatNotification
                 locale={locale}
                 userEmailAddress={selectedChat.email}

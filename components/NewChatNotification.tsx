@@ -72,8 +72,8 @@ const NewChatNotification = ({
       <button
         className="cursor-pointer flex items-center"
         onClick={handleSendEmail}
-        onMouseEnter={() => setShowTooltip(true)} // Show tooltip on hover
-        onMouseLeave={() => setShowTooltip(false)} // Hide tooltip when not hovering
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
         {loading ? (
           <FiLoader className="animate-spin" />
