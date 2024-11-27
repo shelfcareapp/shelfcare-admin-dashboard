@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 export async function POST(req: Request) {
   const body = await req.json();
 
-  const { userName, userEmail, messageContent } = body;
+  const { userEmail, messageContent, subject } = body;
 
   const transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -17,8 +17,8 @@ export async function POST(req: Request) {
   const mailOptions = {
     from: process.env.GMAIL_FROM,
     to: userEmail,
-    subject: 'New Message Notification',
-    text: `Hello ${userName},\n\nYou have received a new message:\n\n${messageContent}\n\nPlease log in to your account to view the message.`
+    subject,
+    text: messageContent
   };
 
   try {

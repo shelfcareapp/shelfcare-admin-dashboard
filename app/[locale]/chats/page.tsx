@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Layout from 'components/Layout';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { FiPaperclip } from 'react-icons/fi';
 import React, { useEffect } from 'react';
 import {
@@ -16,16 +16,27 @@ import { useAppDispatch, useAppSelector } from 'hooks/use-store';
 import { useChatScroll } from 'hooks/use-chat-scroll';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import NewChatNotification from 'components/NewChatNotification';
+import { selectUsers } from 'store/slices/users-slice';
+import { setSelectedUser } from 'store/slices/user-selection-slice';
+import { useRouter } from 'next/navigation';
 
 export default function Component() {
-  const [selectedChat, setSelectedChat] = useState('');
+  const [selectedChat, setSelectedChat] = useState({
+    name: '',
+    email: '',
+    id: ''
+  });
   const [chatColors, setChatColors] = useState<{ [key: string]: string }>({});
   const [images, setImages] = useState<File[] | null>(null);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const dispatch = useAppDispatch();
   const { chats, selectedChatId, searchTerm, loading, message } =
     useAppSelector((state) => state.chats);
+  const users = useAppSelector(selectUsers);
   const chatRef = useChatScroll(chats);
+  const locale = useLocale();
+  const router = useRouter();
 
   const chatsToUse = Array.isArray(chats) ? chats : [];
   const selectedUserChat: Chat | undefined = chatsToUse.find(
@@ -52,6 +63,12 @@ export default function Component() {
       }
     });
   }, [chats]);
+
+  useEffect(() => {
+    if (chatRef.current) {
+      chatRef.current.scrollTop = chatRef.current.scrollHeight;
+    }
+  }, [chats, selectedChatId]);
 
   const getNameInitials = (name: string) => {
     if (!name) return '';
@@ -163,6 +180,23 @@ export default function Component() {
 
     return null;
   };
+  // if selectedChat is not empty, show header
+  const showHeader = () => {
+    for (let key in selectedChat) {
+      if (selectedChat[key] !== '') {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const handleUserSelection = () => {
+    const user = users.find((user) => user.email === selectedChat.email);
+    dispatch(setSelectedUser(user));
+
+    // navigate to new order page
+    router.push('/new-order');
+  };
 
   return (
     <Layout>
@@ -202,11 +236,15 @@ export default function Component() {
                   <div
                     key={chat.id}
                     className={`flex items-center gap-3 rounded-lg p-3 cursor-pointer hover:bg-base-200 space-y-1 ${
-                      selectedChat === chat.name ? 'bg-base-200' : ''
+                      selectedChat.name === chat.name ? 'bg-base-200' : ''
                     }`}
                     onClick={async () => {
                       dispatch(setSelectedChatId(chat.id));
-                      setSelectedChat(chat.name);
+                      setSelectedChat({
+                        name: chat.name,
+                        email: chat.email,
+                        id: chat.id
+                      });
                     }}
                   >
                     <div
@@ -239,36 +277,38 @@ export default function Component() {
 
         {/* Messaging Section */}
         <div className="flex flex-1 flex-col">
-          {/* Header */}
-          <div className="flex items-center justify-between border-b border-base-300 px-4 py-2">
-            <div className="flex items-center gap-2">
-              {selectedChat ? (
+          {showHeader() && (
+            <div className="flex items-center justify-between border-b border-base-300 px-4 py-2">
+              <div className="flex items-center gap-2">
                 <div className="avatar placeholder w-10 h-10 rounded-full bg-primary">
                   <div className=" text-neutral-content">
                     <span className="text-xs">
-                      {getNameInitials(selectedChat)}
+                      {getNameInitials(selectedChat.name)}
                     </span>
                   </div>
                 </div>
-              ) : null}
-              <span className="text-lg font-medium">{selectedChat}</span>
+                <span className="text-lg font-medium">{selectedChat.name}</span>
+              </div>
+              <button
+                className="bg-primary cursor-pointer p-2 rounded-lg text-white"
+                onClick={handleUserSelection}
+              >
+                {locale === 'fi' ? 'Tee uusi tilaus' : 'Make new order'}
+              </button>
+              <NewChatNotification
+                locale={locale}
+                userEmailAddress={selectedChat.email}
+                userName={selectedChat.name}
+              />
             </div>
-            <span className="text-sm text-base-content/60">
-              <strong>Order ID: </strong>
-              {selectedChatId}
-            </span>
-          </div>
+          )}
 
           {/* Message Area */}
           <div className="flex-1 overflow-auto">
-            {/* Empty State */}
-            <div
-              ref={chatRef}
-              className="flex h-full flex-col items-center justify-center text-center bg-gray-50"
-            >
+            <div className="flex h-full flex-col items-center justify-center text-center bg-gray-50">
               <div className="flex flex-col h-full w-full">
                 {selectedUserChat ? (
-                  <div className="flex-1 p-4 overflow-y-auto">
+                  <div className="flex-1 p-4 overflow-y-auto" ref={chatRef}>
                     {selectedUserChat.messages.map((msg, index) => (
                       <div
                         key={index}
