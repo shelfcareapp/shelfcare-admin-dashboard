@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { NextResponse } from 'next/server';
+import { config } from '../../../config';
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -7,7 +8,9 @@ export async function POST(req: Request) {
   const { userEmail, messageContent, subject } = body;
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
       user: process.env.GMAIL_FROM,
       pass: process.env.GMAIL_APP_PASSWORD
@@ -15,7 +18,7 @@ export async function POST(req: Request) {
   });
 
   const mailOptions = {
-    from: process.env.GMAIL_FROM,
+    from: { name: 'Maija Tunturi- ShelfCare', address: config.mailing.noreply },
     to: userEmail,
     subject,
     text: messageContent

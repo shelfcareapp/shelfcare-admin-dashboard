@@ -85,6 +85,9 @@ export interface Order {
   customerName: string;
   customerAddress: string;
   customerPhone: string;
+  customerPostalCode?: string;
+  customerCity?: string;
+  customerEntranceInfo?: string;
   services: SelectedServices[];
   totalPrice: number;
   status: 'pending_customer_input' | 'confirmed' | 'completed';

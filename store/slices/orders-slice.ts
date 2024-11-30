@@ -18,7 +18,34 @@ export const fetchOrders = createAsyncThunk('orders/fetchOrders', async () => {
     );
   });
 
-  return orders as Order[];
+  const usersSnapshot = await getDocs(collection(db, 'users'));
+  const users = usersSnapshot.docs.reduce((acc, doc) => {
+    const userData = doc.data();
+    acc[doc.id] = {
+      id: doc.id,
+      ...userData
+    };
+    return acc;
+  }, {} as Record<string, any>);
+
+  const enrichedOrders = orders.map((order) => {
+    const user = users[order.customerId];
+    if (user) {
+      return {
+        ...order,
+        customerAddress: user.address || null,
+        customerPhone: user.phone || null,
+        customerCity: user.city || null,
+        customerPostalCode: user.postalCode || null,
+        customerEntranceInfo: user.doorInfo || null
+      };
+    }
+    return order;
+  });
+
+  console.log('enrichedOrders', enrichedOrders);
+
+  return enrichedOrders as Order[];
 });
 
 const ordersSlice = createSlice({

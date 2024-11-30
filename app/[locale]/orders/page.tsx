@@ -181,10 +181,18 @@ export default function OrdersPage() {
                             {order.customerEmail}
                           </div>
                           <div className="text-gray-500">
-                            {order.customerAddress}
+                            <strong>Osoite:</strong> {order.customerAddress}
                           </div>
                           <div className="text-gray-500">
-                            {order.customerPhone}
+                            <strong>Kaupunki:</strong> {order.customerCity}
+                          </div>
+                          <div className="text-gray-500 break-words text-wrap">
+                            <strong>Lisätietoa:</strong>{' '}
+                            {order.customerEntranceInfo}
+                          </div>
+
+                          <div className="text-gray-500">
+                            <strong>Puhelinnumero</strong> {order.customerPhone}
                           </div>
                         </td>
                         <td className="whitespace-nowrap px-3 py-5 text-sm text-gray-500">

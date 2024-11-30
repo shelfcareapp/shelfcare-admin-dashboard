@@ -17,7 +17,9 @@ const NewChatNotification = ({
   const [loading, setLoading] = React.useState(false);
   const [showTooltip, setShowTooltip] = React.useState(false);
 
-  const enMessage = `Hello ${userName},\n\nYou have received a new message:\n\nPlease log in to your account to view the message.
+  const name = userName.split(' ')[0];
+
+  const enMessage = `Hello ${name},\n\nYou have received a new message:\n\nPlease log in to your account to view the message.
 
   https://shelfcare.app/chat
 
@@ -25,7 +27,7 @@ const NewChatNotification = ({
   Shelfcare Team  
   `;
 
-  const fiMessage = `Hei ${userName},\n\nOlet saanut uuden viestin:\n\nKirjaudu sisään tilillesi nähdäksesi viestin.
+  const fiMessage = `Hei ${name},\n\nOlet saanut uuden viestin:\n\nKirjaudu sisään tilillesi nähdäksesi viestin.
 
   https://shelfcare.app/chat
 
